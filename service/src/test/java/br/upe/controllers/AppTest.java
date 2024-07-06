@@ -1,8 +1,9 @@
-package br.upe.pojos;
+package br.upe.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit test for simple App.
  */
