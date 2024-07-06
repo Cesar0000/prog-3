@@ -1,4 +1,4 @@
-package br.upe;
+package br.upe.pojos;
 
 import static org.junit.Assert.assertTrue;
 

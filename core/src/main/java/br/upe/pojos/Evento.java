@@ -1,3 +1,5 @@
+package br.upe.pojos;
+
 public class Evento {
     private String name;
 
@@ -9,3 +11,4 @@ public class Evento {
         return name;
     }
 }
+
