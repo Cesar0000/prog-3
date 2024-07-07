@@ -3,11 +3,6 @@ package br.upe.pojos;
 public class SubEvent extends PlainEvent {
     private Session[] sessions;
 
-    private String name;
-    private String director;
-    private String startDate;
-    private String endDate;
-
     public void setName(String name) {
         this.name = name;
     }

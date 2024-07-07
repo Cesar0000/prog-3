@@ -1,13 +1,7 @@
 package br.upe.pojos;
 
 public class GreatEvent extends PlainEvent{
-
-    private PlainEvent[] subEvents; 
-
-    private String name;
-    private String director;
-    private String startDate;
-    private String endDate;
+    private PlainEvent[] subEvents;
 
     public void setName(String name) {
         this.name = name;

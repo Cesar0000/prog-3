@@ -1,10 +1,10 @@
 package br.upe.pojos;
 
 public abstract class PlainEvent {
-    String name;
-    String director;
-    String startDate;
-    String endDate;
+    protected String name;
+    protected String director;
+    protected String startDate;
+    protected String endDate;
 
     abstract void setName(String name);
     abstract void setDirector(String director);
