@@ -1,10 +1,10 @@
 package br.upe.controllers;
 
-import br.upe.pojos.Evento;
+import br.upe.pojos.GreatEvent;
 
 public class EventoController {
     public static void main(String[] args){
-        Evento even1 = new Evento();
+        GreatEvent even1 = new GreatEvent();
 
         even1.setName("SUPER");
 
