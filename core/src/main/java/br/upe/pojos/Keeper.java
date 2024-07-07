@@ -1,11 +1,8 @@
 package br.upe.pojos;
 
-public interface Keeper {
-    public static GreatEvent createGreatEvent(){
-        return new GreatEvent();
-
-    }
-    public static SubEvent createSubEvent(){
+public class Keeper implements KeeperInterface {
+    public GreatEvent createGreatEvent(){ return new GreatEvent(); }
+    public SubEvent createSubEvent(){
         return new SubEvent();
     }
 }

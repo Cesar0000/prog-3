@@ -1,8 +1,12 @@
 package br.upe.pojos;
+import java.util.Collection;
 
 public class GreatEvent extends PlainEvent{
-    private PlainEvent[] subEvents;
+    private Collection<PlainEvent> subEvents;
 
+    public void setSubEvents(Collection<PlainEvent> subEvents) {
+        this.subEvents = subEvents;
+    }
     public void setName(String name) {
         this.name = name;
     }
@@ -28,4 +32,5 @@ public class GreatEvent extends PlainEvent{
     public String getEndDate(){
         return this.endDate;
     }
+    public Collection<PlainEvent> getSubEvents(){ return this.subEvents; }
 }
