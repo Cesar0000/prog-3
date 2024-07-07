@@ -1,10 +1,12 @@
 package br.upe.controllers;
 
-import br.upe.pojos.GreatEvent;
+import br.upe.pojos.PlainEvent;
+import br.upe.pojos.Keeper;
 
+////////////////////////////////////////////////////////////////////////////////////
 public class EventoController {
     public static void main(String[] args){
-        GreatEvent even1 = new GreatEvent();
+        PlainEvent even1 = Keeper.createGreatEvent();
 
         even1.setName("SUPER");
 
