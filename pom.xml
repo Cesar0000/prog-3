@@ -143,9 +143,9 @@
   
   <modules>
         
-    <module>core</module>
+    <module>persistencia</module>
         
-    <module>service</module>
+    <module>controllers</module>
       
   </modules>
   
