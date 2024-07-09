@@ -17,7 +17,7 @@ public class TestController {
         even1.setSubEvents( new ArrayList<PlainEvent>() );
 
         SubEvent HansenAI = keeper.createSubEvent();
-        HansenAI.setName("HansenAI");
+        HansenAI.setName("HansenAI2");
 
         even1.getSubEvents().add( HansenAI );
 
