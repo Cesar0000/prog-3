@@ -5,11 +5,15 @@ import java.util.Collection;
 public class Session {
     private Collection<Subscription> subscriptions;
 
-    protected void addSubscription(Subscription subscription){
+    public void addSubscription(Subscription subscription){
         subscriptions.add(subscription);
     }
 
     public Collection<Subscription> getSubscriptions() {
         return subscriptions;
+    }
+
+    public void setSubscriptions(Collection<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }

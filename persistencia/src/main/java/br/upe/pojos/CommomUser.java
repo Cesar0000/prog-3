@@ -10,26 +10,25 @@ public class CommomUser extends User {
     public String getEmail() {
         return this.email;
     }
-
     public void setName(String name) {
         this.name = name;
     }
     public String getName() {
         return this.name;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
     public String getPassword() {
         return this.password;
     }
-
-    public void setSubscriptions(Subscription subscription) {
-        this.subscriptions.add(subscription);
+    public Collection<String> getSessionsHexCode(){
+        return this.sessionsHexCode;
     }
-    public Collection<Subscription> getSubscriptions() {
-        return this.subscriptions;
+    public void setSessionsHexCode(Collection<String> sessionsHexCode){
+        this.sessionsHexCode = sessionsHexCode;
     }
-
+    public void addSessionHexCode(String sessionHexCode){
+        this.sessionsHexCode.add(sessionHexCode);
+    }
 }

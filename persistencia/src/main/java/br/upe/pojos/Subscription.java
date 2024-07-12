@@ -2,14 +2,17 @@ package br.upe.pojos;
 
 public class Subscription {
     private String validationCode;
+    private String sessionHexCode;
 
-    public void setValidationCode(User user){
-        int hash = 7;
-        hash = 31 * hash + (user.name == null ? 0 : user.name.hashCode());
-        hash = 31 * hash + (user.email == null ? 0 : user.email.hashCode());
-        this.validationCode = String.valueOf(hash);
+    public void setSessionHexCode(String sessionHexCode) {
+        this.sessionHexCode = sessionHexCode;
     }
-
+    public String getSessionHexCode() {
+        return sessionHexCode;
+    }
+    public void setValidationCode(String validationCode){
+        this.validationCode = validationCode;
+    }
     public String getValidationCode(){
         return this.validationCode;
     }
