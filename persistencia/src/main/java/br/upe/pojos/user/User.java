@@ -1,4 +1,4 @@
-package br.upe.pojos;
+package br.upe.pojos.user;
 
 public abstract class User {
     protected String name;
