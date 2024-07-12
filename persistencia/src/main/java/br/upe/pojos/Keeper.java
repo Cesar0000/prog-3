@@ -11,4 +11,8 @@ public class Keeper implements KeeperInterface {
     public CommomUser createCommomUser() {
         return new CommomUser();
     }
+
+    public Subscription createSubscription(){
+        return new Subscription();
+    }
 }

@@ -1,10 +1,6 @@
 package br.upe.controllers;
 
-import br.upe.pojos.Keeper;
-import br.upe.pojos.GreatEvent;
-import br.upe.pojos.PlainEvent;
-import br.upe.pojos.SubEvent;
-import br.upe.pojos.CommomUser;
+import br.upe.pojos.*;
 
 import java.util.ArrayList;
 
@@ -24,7 +20,12 @@ public class TestController {
 
         CommomUser user1 = keeper.createCommomUser();
         user1.setName("Carlos");
+        user1.setEmail("carlos@gmail.com");
+        user1.setPassword("123456");
 
+        Subscription sub1 = keeper.createSubscription();
+
+        user1.setSubscriptions(sub1);
         System.out.println(even1.getSubEvents().iterator().next().getName());
     }
 }
