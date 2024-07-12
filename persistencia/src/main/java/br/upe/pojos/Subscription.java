@@ -1,6 +1,12 @@
 package br.upe.pojos;
 
-abstract class Subscription {
+public class Subscription {
     private String validationCode;
-    abstract String getValidationCode();
+    private int id;
+
+    public String getValidationCode(){
+        return this.validationCode;
+    }
+
+
 }

@@ -8,4 +8,8 @@ public class Session {
     protected void addSubscription(Subscription subscription){
         subscriptions.add(subscription);
     }
+
+    public Collection<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
 }
