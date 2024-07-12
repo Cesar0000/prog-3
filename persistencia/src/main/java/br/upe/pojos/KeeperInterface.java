@@ -1,9 +1,9 @@
 package br.upe.pojos;
 
-import br.upe.pojos.user.CommomUser;
+import java.util.concurrent.Flow;
 
 public interface KeeperInterface {
-    public GreatEvent createGreatEvent();
-    public SubEvent createSubEvent();
-    public CommomUser createCommomUser();
+    GreatEvent createGreatEvent();
+    SubEvent createSubEvent();
+    CommomUser createCommomUser();
 }

@@ -4,7 +4,7 @@ import br.upe.pojos.Keeper;
 import br.upe.pojos.GreatEvent;
 import br.upe.pojos.PlainEvent;
 import br.upe.pojos.SubEvent;
-import br.upe.pojos.user.CommomUser;
+import br.upe.pojos.CommomUser;
 
 import java.util.ArrayList;
 
@@ -24,8 +24,6 @@ public class TestController {
 
         CommomUser user1 = keeper.createCommomUser();
         user1.setName("Carlos");
-
-
 
         System.out.println(even1.getSubEvents().iterator().next().getName());
     }

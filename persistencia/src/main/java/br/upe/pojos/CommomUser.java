@@ -1,4 +1,4 @@
-package br.upe.pojos.user;
+package br.upe.pojos;
 
 public class CommomUser extends User {
 
