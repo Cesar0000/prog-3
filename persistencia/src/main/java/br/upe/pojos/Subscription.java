@@ -3,9 +3,7 @@ package br.upe.pojos;
 public class Subscription {
     private String validationCode;
 
-
-
-    private void setValidationCode(User user){
+    public void setValidationCode(User user){
         int hash = 7;
         hash = 31 * hash + (user.name == null ? 0 : user.name.hashCode());
         hash = 31 * hash + (user.email == null ? 0 : user.email.hashCode());
@@ -15,5 +13,4 @@ public class Subscription {
     public String getValidationCode(){
         return this.validationCode;
     }
-
 }

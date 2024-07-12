@@ -23,9 +23,10 @@ public class TestController {
         user1.setEmail("carlos@gmail.com");
         user1.setPassword("123456");
 
-        Subscription sub1 = keeper.createSubscription();
+        Subscription sub1 = keeper.createSubscription(user1);
 
         user1.setSubscriptions(sub1);
+        System.out.println(user1.getSubscriptions().iterator().next().getValidationCode());
         System.out.println(even1.getSubEvents().iterator().next().getName());
     }
 }

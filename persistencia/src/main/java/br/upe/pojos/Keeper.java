@@ -12,7 +12,9 @@ public class Keeper implements KeeperInterface {
         return new CommomUser();
     }
 
-    public Subscription createSubscription(){
-        return new Subscription();
+    public Subscription createSubscription(User user){
+        Subscription sub =  new Subscription();
+        sub.setValidationCode(user);
+        return sub;
     }
 }

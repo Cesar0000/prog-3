@@ -1,5 +1,7 @@
 package br.upe.pojos;
 
+import java.util.Collection;
+
 public class CommomUser extends User {
 
     public void setEmail(String email) {
@@ -25,6 +27,9 @@ public class CommomUser extends User {
 
     public void setSubscriptions(Subscription subscription) {
         this.subscriptions.add(subscription);
+    }
+    public Collection<Subscription> getSubscriptions() {
+        return this.subscriptions;
     }
 
 }

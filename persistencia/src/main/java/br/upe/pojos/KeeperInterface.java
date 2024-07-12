@@ -6,5 +6,5 @@ public interface KeeperInterface {
     GreatEvent createGreatEvent();
     SubEvent createSubEvent();
     CommomUser createCommomUser();
-    Subscription createSubscription();
+    Subscription createSubscription(User user);
 }
