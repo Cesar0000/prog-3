@@ -1,5 +1,5 @@
 package br.upe.pojos;
 
-abstract class Session {
+public abstract class Session {
     Subscription subscriptions;
 }

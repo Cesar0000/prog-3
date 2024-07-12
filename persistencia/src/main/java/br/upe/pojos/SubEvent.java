@@ -2,7 +2,7 @@ package br.upe.pojos;
 import java.util.Collection;
 
 public class SubEvent extends PlainEvent {
-    private Collection<Session> sessions;
+    private Collection<Session>  sessions;
 
     public void setName(String name) {
         this.name = name;
