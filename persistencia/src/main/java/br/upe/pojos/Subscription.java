@@ -1,19 +1,29 @@
 package br.upe.pojos;
 
-public class Subscription {
-    private String validationCode;
-    private String sessionHexCode;
+import java.util.UUID;
 
-    public void setSessionHexCode(String sessionHexCode) {
-        this.sessionHexCode = sessionHexCode;
+public class Subscription {
+
+    private UUID uuid;
+    private UUID sessionUuid;
+    private UUID userUuid;
+
+    public UUID getUuid() {
+        return this.uuid;
     }
-    public String getSessionHexCode() {
-        return sessionHexCode;
+    public UUID getSessionUuid() {
+        return sessionUuid;
     }
-    public void setValidationCode(String validationCode){
-        this.validationCode = validationCode;
+    public UUID getUserUuid() {
+        return userUuid;
     }
-    public String getValidationCode(){
-        return this.validationCode;
+    public void setUserUuid(UUID userUuid) {
+        this.userUuid = userUuid;
+    }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+    public void setSessionUuid(UUID sessionUuid) {
+        this.sessionUuid = sessionUuid;
     }
 }
