@@ -1,6 +1,10 @@
 package br.upe.pojos;
 
+import java.util.Collection;
+
 public abstract class PlainEvent {
+    protected Collection<Session> sessions;
+
     protected String name;
     protected String director;
     protected String startDate;

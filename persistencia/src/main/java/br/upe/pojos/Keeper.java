@@ -7,4 +7,8 @@ public class Keeper implements KeeperInterface {
     public SubEvent createSubEvent(){
         return new SubEvent();
     }
+
+    public CommomUser createCommomUser() {
+        return new CommomUser();
+    }
 }
