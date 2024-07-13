@@ -1,30 +1,42 @@
 package br.upe.controllers;
 
-import br.upe.pojos.Keeper;
-import br.upe.pojos.GreatEvent;
-import br.upe.pojos.PlainEvent;
-import br.upe.pojos.SubEvent;
-import br.upe.pojos.CommomUser;
+/**
+ * Import pojo classes
+ */
 
-import java.util.ArrayList;
+import br.upe.pojos.CommomUser;
+import br.upe.pojos.GreatEvent;
+import br.upe.pojos.Subscription;
+
+/**
+ * Import Factory methods
+ */
+
+import static br.upe.pojos.KeeperInterface.createCommomUser;
+import static br.upe.pojos.KeeperInterface.createGreatEvent;
+import static br.upe.pojos.KeeperInterface.createSubscription;
+
+/**
+ * Import data struct features
+ */
 
 public class TestController {
     public static void main(String[] args){
 
-        Keeper keeper = new Keeper();
-        GreatEvent even1 = keeper.createGreatEvent();
+        GreatEvent even1 = createGreatEvent();
 
         even1.setName("SUPER");
-        even1.setSubEvents( new ArrayList<PlainEvent>() );
 
-        SubEvent HansenAI = keeper.createSubEvent();
-        HansenAI.setName("HansenAI2");
-
-        even1.getSubEvents().add( HansenAI );
-
-        CommomUser user1 = keeper.createCommomUser();
+        CommomUser user1 = createCommomUser();
         user1.setName("Carlos");
+        user1.setEmail("carlos@gmail.com");
+        user1.setPassword("123456");
 
-        System.out.println(even1.getSubEvents().iterator().next().getName());
+        Subscription sub1 = createSubscription(user1);
+        sub1.setValidationCode("oiii");
+
+        user1.addSessionHexCode(sub1.getValidationCode());
+
     }
+    //vai commit
 }

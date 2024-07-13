@@ -1,6 +1,19 @@
 package br.upe.pojos;
 
-abstract class Subscription {
+public class Subscription {
     private String validationCode;
-    abstract String getValidationCode();
+    private String sessionHexCode;
+
+    public void setSessionHexCode(String sessionHexCode) {
+        this.sessionHexCode = sessionHexCode;
+    }
+    public String getSessionHexCode() {
+        return sessionHexCode;
+    }
+    public void setValidationCode(String validationCode){
+        this.validationCode = validationCode;
+    }
+    public String getValidationCode(){
+        return this.validationCode;
+    }
 }

@@ -1,36 +1,43 @@
 package br.upe.pojos;
 import java.util.Collection;
 
-public class GreatEvent extends PlainEvent{
-    private Collection<PlainEvent> subEvents;
+public class GreatEvent {
 
-    public void setSubEvents(Collection<PlainEvent> subEvents) {
-        this.subEvents = subEvents;
-    }
+    private String name;
+    private String director;
+    private String startDate;
+    private String endDate;
+
+
     public void setName(String name) {
         this.name = name;
     }
-    public void setDirector(String director){
+
+    public void setDirector(String director) {
         this.director = director;
     }
-    public void setStartDate(String startDate){
+
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
-    public void setEndDate(String endDate){
+
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
-    public String getDirector(){
+
+    public String getDirector() {
         return this.director;
     }
-    public String getStartDate(){
+
+    public String getStartDate() {
         return this.startDate;
     }
-    public String getEndDate(){
+
+    public String getEndDate() {
         return this.endDate;
     }
-    public Collection<PlainEvent> getSubEvents(){ return this.subEvents; }
 }
