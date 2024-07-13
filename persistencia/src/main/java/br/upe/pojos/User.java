@@ -1,13 +1,14 @@
 package br.upe.pojos;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public abstract class User {
     protected String name;
     protected String password;
     protected String email;
-
-    protected Collection<String> sessionsHexCode;
+    protected UUID uuid;
+    protected Collection<Subscription> subscriptions;
 
     public abstract void setEmail(String email);
     public abstract String getEmail();
@@ -18,7 +19,11 @@ public abstract class User {
     public abstract void setPassword(String password);
     public abstract String getPassword();
 
-    public abstract void setSessionsHexCode(Collection<String> sessionsHexCode);
-    public abstract Collection<String> getSessionsHexCode();
-    public abstract void addSessionHexCode(String sessionHexCode);
+    public abstract void setUuid(UUID uuid);
+    public abstract UUID getUuid();
+
+    public abstract void addSubscription(Subscription subscription);
+    public abstract Collection<Subscription> getSubscriptions();
+    public abstract void setSubscriptions(Collection<Subscription> subscriptions);
+
 }

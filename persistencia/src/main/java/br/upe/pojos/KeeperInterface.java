@@ -1,6 +1,7 @@
 package br.upe.pojos;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public interface KeeperInterface {
     static GreatEvent createGreatEvent(){
@@ -9,7 +10,7 @@ public interface KeeperInterface {
 
     static CommomUser createCommomUser() {
         CommomUser commomUser = new CommomUser();
-        commomUser.setSessionsHexCode(new ArrayList<String>());
+        commomUser.setSubscriptions(new ArrayList<Subscription>());
         return commomUser;
     }
 

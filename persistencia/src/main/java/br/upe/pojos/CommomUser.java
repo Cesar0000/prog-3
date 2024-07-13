@@ -1,6 +1,7 @@
 package br.upe.pojos;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class CommomUser extends User {
 
@@ -22,13 +23,19 @@ public class CommomUser extends User {
     public String getPassword() {
         return this.password;
     }
-    public Collection<String> getSessionsHexCode(){
-        return this.sessionsHexCode;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
-    public void setSessionsHexCode(Collection<String> sessionsHexCode){
-        this.sessionsHexCode = sessionsHexCode;
+    public UUID getUuid() {
+        return this.uuid;
     }
-    public void addSessionHexCode(String sessionHexCode){
-        this.sessionsHexCode.add(sessionHexCode);
+    public void addSubscription(Subscription subscription){
+        subscriptions.add(subscription);
+    }
+    public Collection<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+    public void setSubscriptions(Collection<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }
