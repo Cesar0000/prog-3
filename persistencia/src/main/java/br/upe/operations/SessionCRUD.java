@@ -9,8 +9,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SessionMirror {
-    public SessionMirror(){
+public class SessionCRUD {
+    public SessionCRUD(){
         try {
             File d = new File(".\\state");
             while(!d.exists()) d.mkdirs();
@@ -31,16 +31,16 @@ public class SessionMirror {
     }
     public void removeSession(UUID sessionUuid){
         int i = 0;
-        ArrayList<String> filecopy = new ArrayList<>();
+        ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
             while(buffer.ready()){
-                filecopy.add(buffer.readLine());
+                fileCopy.add(buffer.readLine());
             };
         } catch (Exception e) {}
 
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\sessions.csv"))){
-            for(String line: filecopy){
+            for(String line: fileCopy){
                 if(line.contains(sessionUuid.toString())) continue;
                 buffer.write(line);
                 buffer.newLine();
