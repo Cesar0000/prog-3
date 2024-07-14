@@ -6,6 +6,12 @@ import java.util.UUID;
 public class Session extends EventComponent {
     private Collection<Subscription> subscriptions;
 
+    public void setDescritor(String descritor) {
+        this.descritor = descritor;
+    }
+    public String getDescritor(){
+        return this.descritor;
+    }
     public void addSubscription(Subscription subscription){
         subscriptions.add(subscription);
     }
