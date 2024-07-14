@@ -1,13 +1,15 @@
 package br.upe.pojos;
 import java.util.Collection;
 import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class GreatEvent {
 
     private String name;
     private String director;
-    private String startDate;
-    private String endDate;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     private UUID uuid;
     private Collection<Session> sessions;
 
@@ -17,11 +19,10 @@ public class GreatEvent {
     public void setDirector(String director) {
         this.director = director;
     }
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartDateTime(LocalDateTime StartDateTime) {this.startDateTime = startDateTime;
     }
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
     public String getName() {
         return this.name;
@@ -29,11 +30,11 @@ public class GreatEvent {
     public String getDirector() {
         return this.director;
     }
-    public String getStartDate() {
-        return this.startDate;
+    public LocalDateTime getStartDateTime() {
+        return this.startDateTime;
     }
-    public String getEndDate() {
-        return this.endDate;
+    public LocalDateTime getEndDateTime() {
+        return this.endDateTime;
     }
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
