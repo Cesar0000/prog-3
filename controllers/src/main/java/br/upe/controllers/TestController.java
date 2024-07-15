@@ -29,6 +29,8 @@ public class TestController {
         Session session = KeeperInterface.createSession();
         session.setEventUuid(even1.getUuid());
         session.setDescritor("Mendeley Presentation");
+        session.setStartDate(new Date());
+        session.setEndDate(new Date());
 
         CommomUser user1 = KeeperInterface.createCommomUser();
         CommomUser user2 = KeeperInterface.createCommomUser();

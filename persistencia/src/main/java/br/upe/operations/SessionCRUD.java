@@ -4,7 +4,9 @@ import br.upe.pojos.Session;
 import br.upe.pojos.Subscription;
 
 import java.io.*;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +24,8 @@ public class SessionCRUD {
             buffer.write(session.getUuid().toString() + ";");
             buffer.write( session.getEventUuid().toString() + ";");
             buffer.write( session.getDescritor() + ";");
+            buffer.write( session.getStartDate().toInstant().toString() + ";");
+            buffer.write( session.getEndDate().toInstant().toString() + ";");
             for (Subscription sub : session.getSubscriptions()){
                 buffer.write(sub.getUuid().toString() + ",");
             }
@@ -67,15 +71,18 @@ public class SessionCRUD {
         Session newSession = new Session();
         newSession.setSubscriptions(new ArrayList<>());
 
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
+        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawSession);
 
         if(matcher.matches()) {
             newSession.setUuid(UUID.fromString(matcher.group(1)));
             newSession.setEventUuid(UUID.fromString(matcher.group(3)));
             newSession.setDescritor(matcher.group(5));
+            newSession.setStartDate(Date.from(Instant.parse(matcher.group(7))));
+            newSession.setEndDate(Date.from(Instant.parse(matcher.group(9))));
 
-            String subscriptions = matcher.group(7);
+
+            String subscriptions = matcher.group(11);
 
             for(String uuid : subscriptions.split(",")){
                 newSession.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(uuid)));
