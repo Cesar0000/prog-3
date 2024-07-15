@@ -21,6 +21,7 @@ public class SessionCRUD {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\sessions.csv", true))){
             buffer.write(session.getUuid().toString() + ";");
             buffer.write( session.getEventUuid().toString() + ";");
+            buffer.write( session.getDescritor() + ";");
             for (Subscription sub : session.getSubscriptions()){
                 buffer.write(sub.getUuid().toString() + ",");
             }
@@ -30,7 +31,6 @@ public class SessionCRUD {
         } catch (Exception e) {}
     }
     public void removeSession(UUID sessionUuid){
-        int i = 0;
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
@@ -51,7 +51,7 @@ public class SessionCRUD {
         removeSession(session.getUuid());
         createSession(session);
     }
-    public Session returnSession(UUID sessionUuid){
+    public static Session returnSession(UUID sessionUuid){
         String rawSession = "";
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
@@ -59,6 +59,7 @@ public class SessionCRUD {
                 String line = buffer.readLine();
                 if(line.contains(sessionUuid.toString())) {
                     rawSession = line;
+                    break;
                 }
             };
         } catch (Exception e) {}
@@ -66,16 +67,18 @@ public class SessionCRUD {
         Session newSession = new Session();
         newSession.setSubscriptions(new ArrayList<>());
 
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)");
+        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawSession);
 
         if(matcher.matches()) {
             newSession.setUuid(UUID.fromString(matcher.group(1)));
             newSession.setEventUuid(UUID.fromString(matcher.group(3)));
+            newSession.setDescritor(matcher.group(5));
 
-            String subs = matcher.group(5);
-            for(String sub : subs.split(",")){
-                System.out.println(sub);
+            String subscriptions = matcher.group(7);
+
+            for(String uuid : subscriptions.split(",")){
+                newSession.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(uuid)));
             }
         }
 
