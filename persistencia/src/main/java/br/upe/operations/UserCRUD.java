@@ -16,7 +16,7 @@ public class UserCRUD extends ClassCRUD {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\users.csv", true))){
             buffer.write(user.getUuid().toString() + ";");
             buffer.write( user.getEmail() + ";");
-            buffer.write( Hasher.hash(user.getPassword() + ";") );
+            buffer.write( Hasher.hash(user.getPassword()) + ";");
             buffer.write( user.getName() + ";");
             buffer.write(user.isAdmin() + ";");
 
