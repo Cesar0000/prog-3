@@ -10,14 +10,10 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.reflect.Field;
 
-public class SessionCRUD {
-    public SessionCRUD(){
-        try {
-            File d = new File(".\\state");
-            while(!d.exists()) d.mkdirs();
-        } catch (Exception e) {}
-    }
+public class SessionCRUD extends ClassCRUD {
+    public SessionCRUD(){ super(); }
 
     public void createSession(Session session){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\sessions.csv", true))){
@@ -51,10 +47,26 @@ public class SessionCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateSession(Session session){
-        removeSession(session.getUuid());
+
+    public void updateSession(UUID sessionUuid, Session newSession) throws IllegalAccessException {
+        Session session = returnSession(sessionUuid);
+        removeSession(sessionUuid);
+        try {
+            Field[] fields = session.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.get(newSession) != null) field.set(session, field.get(newSession));
+            }
+        } catch (IllegalAccessException e){
+            System.out.println("Erro ao atualizar em: " + this.getClass());
+        }
         createSession(session);
     }
+
+    public void updateSession(UUID sessionUUID, Date newStartDate, Date newEndDate){
+        Session session = returnSession(sessionUUID);
+    }
+
     public static Session returnSession(UUID sessionUuid){
         String rawSession = "";
 

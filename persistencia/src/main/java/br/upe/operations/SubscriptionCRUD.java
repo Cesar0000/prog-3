@@ -1,8 +1,10 @@
 package br.upe.operations;
 
+import br.upe.pojos.Session;
 import br.upe.pojos.Subscription;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,13 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class SubscriptionCRUD {
-    public SubscriptionCRUD(){
-        try{
-            File d = new File(".\\state");
-            while(!d.exists()) d.mkdirs();
-        } catch (Exception e) {}
-    }
+public class SubscriptionCRUD extends ClassCRUD{
+    public SubscriptionCRUD(){ super(); }
 
     public void createSubscription(Subscription subscription){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\subscriptions.csv", true))){
@@ -47,8 +44,18 @@ public class SubscriptionCRUD {
         } catch (Exception e) {}
     }
 
-    public void updateSubscription(Subscription subscription){
-        removeSubscription(subscription.getUuid());
+    public void updateSubscription(UUID subscriptionUuid, Subscription newSubscription) throws IllegalAccessException {
+        Subscription subscription = returnSubscription(subscriptionUuid);
+        removeSubscription(subscriptionUuid);
+        try {
+            Field[] fields = subscription.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.get(newSubscription) != null) field.set(subscription, field.get(newSubscription));
+            }
+        } catch (IllegalAccessException e){
+            System.out.println("Erro ao atualizar em: " + this.getClass());
+        }
         createSubscription(subscription);
     }
 

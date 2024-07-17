@@ -17,6 +17,13 @@ public interface KeeperInterface {
         commomUser.setSubscriptions(new ArrayList<Subscription>());
         return commomUser;
     }
+    static AdminUser createAdminUser() {
+        AdminUser adminUser = new AdminUser();
+        adminUser.setUuid(UUID.randomUUID());
+        adminUser.setSubscriptions(new ArrayList<Subscription>());
+        adminUser.setEvents(new ArrayList<GreatEvent>());
+        return adminUser;
+    }
     static Session createSession() {
         Session session = new Session();
         session.setUuid(UUID.randomUUID());
