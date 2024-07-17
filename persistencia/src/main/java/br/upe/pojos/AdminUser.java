@@ -3,8 +3,9 @@ package br.upe.pojos;
 import java.util.Collection;
 import java.util.UUID;
 
-public class CommomUser extends User {
-    protected final boolean isAdmin = false;
+public class AdminUser extends User {
+    protected final boolean isAdmin = true;
+    protected Collection<GreatEvent> events;
 
     public void setEmail(String email) {
         this.email = email;
@@ -33,11 +34,22 @@ public class CommomUser extends User {
     public void addSubscription(Subscription subscription){
         subscriptions.add(subscription);
     }
+
+    public Collection<GreatEvent> getEvents(){
+        return events;
+    }
     public Collection<Subscription> getSubscriptions() {
         return subscriptions;
     }
     public void setSubscriptions(Collection<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
-    public boolean isAdmin() { return isAdmin; }
+
+    public void setEvents(Collection<GreatEvent> events){this.events = events;}
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void addSubscriptions(Subscription subscription) {this.subscriptions.add(subscription);}
+    public void addEvent(GreatEvent event) {this.events.add(event);}
 }
