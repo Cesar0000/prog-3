@@ -16,7 +16,7 @@ public class UserCRUD extends ClassCRUD {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\users.csv", true))){
             buffer.write(user.getUuid().toString() + ";");
             buffer.write( user.getEmail() + ";");
-            buffer.write( Hasher.hash(user.getPassword()) + ";");
+            buffer.write( HasherInterface.hash(user.getPassword()) + ";");
             buffer.write( user.getName() + ";");
             buffer.write(user.isAdmin() + ";");
 
@@ -37,7 +37,7 @@ public class UserCRUD extends ClassCRUD {
         }
     }
 
-    public void removeUser(UUID userUUID){
+    public void deleteUser(UUID userUUID){
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\users.csv"))){
@@ -59,18 +59,10 @@ public class UserCRUD extends ClassCRUD {
         }
     }
 
-    public void updateUser(UUID userUUID, User newUser){
+    public void updateUser(UUID userUUID, User source){
         User user = returnUser(userUUID);
-        removeUser(userUUID);
-        try {
-            Field[] fields = user.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(newUser) != null) field.set(user, field.get(newUser));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
+        deleteUser(userUUID);
+        HelperInterface.checkout(source, user);
         createUser(user);
     }
 

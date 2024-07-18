@@ -1,9 +1,8 @@
 package br.upe.operations;
 
-import br.upe.pojos.Session;
+import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Submission;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +23,7 @@ public class SubmissionCRUD extends ClassCRUD {
             buffer.newLine();
         } catch (Exception e) {}
     }
-    public void removeSubmission(UUID submissionUuid){
+    public void deleteSubmission(UUID submissionUuid){
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))){
@@ -41,33 +40,11 @@ public class SubmissionCRUD extends ClassCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateSubmission(UUID submissionUuid, Submission newSubmission){
+    public void updateSubmission(UUID submissionUuid, Submission source){
         Submission submission = returnSubmission(submissionUuid);
-        removeSubmission(submission.getUuid());
-        try {
-            Field[] fields = submission.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(newSubmission) != null) field.set(submission, field.get(newSubmission));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
+        deleteSubmission(submission.getUuid());
+        HelperInterface.checkout(source, submission);
         createSubmission(submission);
-    }
-
-    public void updateSubmission(UUID submissionUuid, Date newDate){
-        Submission submission = returnSubmission(submissionUuid);
-        removeSubmission(submission.getUuid());
-        try {
-            Field dateField = submission.getClass().getDeclaredField("Date");
-            dateField.setAccessible(true);
-            dateField.set(submission, newDate);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
-        createSubmission(submission);
-
     }
 
     public static Submission returnSubmission(UUID submissionUuid){

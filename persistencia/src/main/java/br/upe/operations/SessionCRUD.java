@@ -1,5 +1,6 @@
 package br.upe.operations;
 
+import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Session;
 import br.upe.pojos.Subscription;
 
@@ -10,7 +11,6 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.lang.reflect.Field;
 
 public class SessionCRUD extends ClassCRUD {
     public SessionCRUD(){ super(); }
@@ -30,7 +30,7 @@ public class SessionCRUD extends ClassCRUD {
             buffer.newLine();
         } catch (Exception e) {}
     }
-    public void removeSession(UUID sessionUuid){
+    public void deleteSession(UUID sessionUuid){
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
@@ -48,23 +48,11 @@ public class SessionCRUD extends ClassCRUD {
         } catch (Exception e) {}
     }
 
-    public void updateSession(UUID sessionUuid, Session newSession) throws IllegalAccessException {
+    public void updateSession(UUID sessionUuid, Session source) {
         Session session = returnSession(sessionUuid);
-        removeSession(sessionUuid);
-        try {
-            Field[] fields = session.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(newSession) != null) field.set(session, field.get(newSession));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
+        deleteSession(sessionUuid);
+        HelperInterface.checkout(source, session);
         createSession(session);
-    }
-
-    public void updateSession(UUID sessionUUID, Date newStartDate, Date newEndDate){
-        Session session = returnSession(sessionUUID);
     }
 
     public static Session returnSession(UUID sessionUuid){

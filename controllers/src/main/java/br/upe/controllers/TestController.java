@@ -26,9 +26,6 @@ import static br.upe.pojos.KeeperInterface.createGreatEvent;
 
 public class TestController {
     public static void main(String[] args){
-
-
-        UserCRUD userCRUD = new UserCRUD();
         AdminUser sudo = createAdminUser();
         sudo.setPassword("password");
         sudo.setEmail("italan.leal@upe.br");
