@@ -1,38 +1,19 @@
 package br.upe.pojos;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 public interface KeeperInterface {
     static GreatEvent createGreatEvent(){
-        GreatEvent event =  new GreatEvent();
-        event.setUuid(UUID.randomUUID());
-        event.setSessions(new ArrayList<>());
-        event.setSubmissions(new ArrayList<>());
-        return event;
+        return new GreatEvent();
     }
     static CommomUser createCommomUser() {
-        CommomUser commomUser = new CommomUser();
-        commomUser.setUuid(UUID.randomUUID());
-        commomUser.setSubscriptions(new ArrayList<Subscription>());
-        return commomUser;
+       return new CommomUser();
     }
     static AdminUser createAdminUser() {
-        AdminUser adminUser = new AdminUser();
-        adminUser.setUuid(UUID.randomUUID());
-        adminUser.setSubscriptions(new ArrayList<Subscription>());
-        adminUser.setEvents(new ArrayList<GreatEvent>());
-        return adminUser;
+        return new AdminUser();
     }
     static Session createSession() {
-        Session session = new Session();
-        session.setUuid(UUID.randomUUID());
-        session.setSubscriptions(new ArrayList<>());
-        return session;
+        return new Session();
     }
     static Subscription createSubscription(){
-        Subscription subscription = new Subscription();
-        subscription.setUuid(UUID.randomUUID());
-        return subscription;
+        return new Subscription();
     }
 }

@@ -13,7 +13,6 @@ public abstract class User {
 
     public abstract void setEmail(String email);
     public abstract String getEmail();
-    public abstract User checkout(User source);
 
     public abstract void setName(String name);
     public abstract String getName();

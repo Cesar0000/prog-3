@@ -39,7 +39,7 @@ public class TestController {
         sudocpy.setSubscriptions(null);
         sudocpy.setEvents(null);
 
-        sudo.checkout(sudocpy);
+        HelperInterface.checkout(sudocpy, sudo);
 
         System.out.println(sudo.getEmail());
     }
