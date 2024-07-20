@@ -1,10 +1,8 @@
 package br.upe.operations;
 
-import br.upe.pojos.Session;
+import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Subscription;
-
 import java.io.*;
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +24,7 @@ public class SubscriptionCRUD extends ClassCRUD{
             buffer.newLine();
         } catch (Exception e) {}
     }
-    public void removeSubscription(UUID subscriptionUuid){
+    public void deleteSubscription(UUID subscriptionUuid){
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\subscriptions.csv"))){
@@ -44,18 +42,10 @@ public class SubscriptionCRUD extends ClassCRUD{
         } catch (Exception e) {}
     }
 
-    public void updateSubscription(UUID subscriptionUuid, Subscription newSubscription) throws IllegalAccessException {
+    public void updateSubscription(UUID subscriptionUuid, Subscription source){
         Subscription subscription = returnSubscription(subscriptionUuid);
-        removeSubscription(subscriptionUuid);
-        try {
-            Field[] fields = subscription.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(newSubscription) != null) field.set(subscription, field.get(newSubscription));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
+        deleteSubscription(subscriptionUuid);
+        HelperInterface.checkout(source, subscription);
         createSubscription(subscription);
     }
 

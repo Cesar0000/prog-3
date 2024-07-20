@@ -4,7 +4,6 @@ import org.w3c.dom.events.Event;
 
 import java.io.*;
 
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +33,7 @@ public class EventCRUD extends ClassCRUD {
             buffer.newLine();
         } catch (Exception e) {}
     }
-    public void removeEvent(UUID eventUuid){
+    public void deleteEvent(UUID eventUuid){
         ArrayList<String> fileCopy = new ArrayList<>();
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
             while(buffer.ready()){
@@ -50,18 +49,10 @@ public class EventCRUD extends ClassCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateEvent(UUID eventUuid, Event newEvent) throws IllegalAccessException {
-        GreatEvent event =  returnEvent(eventUuid);
-        removeEvent(eventUuid);
-        try {
-            Field[] fields = event.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(newEvent) != null) field.set(event, field.get(newEvent));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
+    public void updateEvent(UUID eventUuid, Event source) {
+        GreatEvent event = returnEvent(eventUuid);
+        deleteEvent(eventUuid);
+        HelperInterface.checkout(source, event);
         createEvent(event);
     }
     public static GreatEvent returnEvent(UUID eventUuid){
@@ -107,5 +98,4 @@ public class EventCRUD extends ClassCRUD {
 
         return newEvent;
     }
-
 }

@@ -1,11 +1,13 @@
 package br.upe.pojos;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.UUID;
 
 public class AdminUser extends User {
-    protected final boolean isAdmin = true;
-    protected Collection<GreatEvent> events;
+    private final boolean isAdmin = true;
+    private Collection<GreatEvent> events;
 
     public void setEmail(String email) {
         this.email = email;
@@ -52,4 +54,6 @@ public class AdminUser extends User {
 
     public void addSubscriptions(Subscription subscription) {this.subscriptions.add(subscription);}
     public void addEvent(GreatEvent event) {this.events.add(event);}
+
+
 }
