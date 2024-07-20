@@ -60,6 +60,8 @@ public class SubmissionCRUD extends ClassCRUD {
             };
         } catch (Exception e) {}
 
+        if(rawSubmission.isEmpty()) return null;
+
         Submission newSubmission = new Submission();
         Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawSubmission);

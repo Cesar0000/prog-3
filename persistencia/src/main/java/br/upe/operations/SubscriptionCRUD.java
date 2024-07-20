@@ -62,6 +62,8 @@ public class SubscriptionCRUD extends ClassCRUD{
             };
         } catch (Exception e) {}
 
+        if(rawSubscription.isEmpty()) return null;
+
         Subscription newSubscription = new Subscription();
         Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
 

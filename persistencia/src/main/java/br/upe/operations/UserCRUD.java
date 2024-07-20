@@ -16,8 +16,8 @@ public class UserCRUD extends ClassCRUD {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\users.csv", true))){
             buffer.write(user.getUuid().toString() + ";");
             buffer.write( user.getEmail() + ";");
-            buffer.write( HasherInterface.hash(user.getPassword()) + ";");
-            buffer.write( user.getName() + ";");
+            buffer.write( user.getPassword() + ";");
+            buffer.write(user.getName() + ";" );
             buffer.write(user.isAdmin() + ";");
 
             for (Subscription sub : user.getSubscriptions()){
@@ -81,11 +81,13 @@ public class UserCRUD extends ClassCRUD {
             System.out.println("Erro ao ler arquivo em: UserCRUD");
         }
 
+        if(rawUser.isEmpty()) return null;
+
         Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawUser);
         User newUser;
 
-        if(matcher.group(9).equals("true")){
+        if(matcher.matches() && matcher.group(9).equals("true")){
             newUser = new AdminUser();
         } else {
             newUser = new CommomUser();
@@ -97,11 +99,11 @@ public class UserCRUD extends ClassCRUD {
             newUser.setPassword(matcher.group(5));
             newUser.setName(matcher.group(7));
             for (String subscription : matcher.group(11).split(",")){
-                newUser.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(subscription)));
+                if(!subscription.isEmpty()) newUser.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(subscription)));
             }
             if(newUser instanceof AdminUser userHandler){
                 for (String event : matcher.group(13).split(",")){
-                    userHandler.addEvent(EventCRUD.returnEvent(UUID.fromString(event)));
+                    if(!event.isEmpty())userHandler.addEvent(EventCRUD.returnEvent(UUID.fromString(event)));
                 }
             }
         }
