@@ -68,6 +68,8 @@ public class EventCRUD extends ClassCRUD {
             };
         } catch (Exception e) {}
 
+        if(rawEvent.isEmpty()) return null;
+
         GreatEvent newEvent = new GreatEvent();
         newEvent.setSubmissions(new ArrayList<>());
         newEvent.setSessions(new ArrayList<>());

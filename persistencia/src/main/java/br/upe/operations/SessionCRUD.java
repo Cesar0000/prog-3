@@ -68,6 +68,8 @@ public class SessionCRUD extends ClassCRUD {
             };
         } catch (Exception e) {}
 
+        if(rawSession.isEmpty()) return null;
+
         Session newSession = new Session();
         newSession.setSubscriptions(new ArrayList<>());
 
