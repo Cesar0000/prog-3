@@ -1,11 +1,13 @@
 package br.upe.pojos;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.UUID;
 
-public class CommomUser extends User {
-    protected final boolean isAdmin = false;
+public class AdminUser extends User {
+    private final boolean isAdmin = true;
+    private Collection<GreatEvent> events;
 
     public void setEmail(String email) {
         this.email = email;
@@ -34,23 +36,24 @@ public class CommomUser extends User {
     public void addSubscription(Subscription subscription){
         subscriptions.add(subscription);
     }
+
+    public Collection<GreatEvent> getEvents(){
+        return events;
+    }
     public Collection<Subscription> getSubscriptions() {
         return subscriptions;
     }
     public void setSubscriptions(Collection<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
-    public boolean isAdmin() { return isAdmin; }
-    public User checkout(User source){
-        try {
-            Field[] fields = this.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(source) != null) field.set(this, field.get(source));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
-        return this;
+
+    public void setEvents(Collection<GreatEvent> events){this.events = events;}
+    public boolean isAdmin() {
+        return isAdmin;
     }
+
+    public void addSubscriptions(Subscription subscription) {this.subscriptions.add(subscription);}
+    public void addEvent(GreatEvent event) {this.events.add(event);}
+
+
 }

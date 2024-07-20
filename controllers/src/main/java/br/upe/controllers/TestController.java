@@ -1,31 +1,17 @@
 package br.upe.controllers;
 
-/**
- * Import pojo classes
- */
-
-import br.upe.pojos.CommomUser;
-import br.upe.pojos.GreatEvent;
-import br.upe.pojos.Subscription;
-
-/**
- * Import Factory methods
- */
-
-import static br.upe.pojos.KeeperInterface.createCommomUser;
-import static br.upe.pojos.KeeperInterface.createGreatEvent;
-import static br.upe.pojos.KeeperInterface.createSubscription;
-
-/**
- * Import data struct features
- */
-
 public class TestController {
     public static void main(String[] args){
+        StateController state = new StateController();
+        CRUDController crud = new CRUDController();
 
-        GreatEvent even1 = createGreatEvent();
-        even1.setName("SUPER");
+        AuthController auth = new AuthController(state, crud);
 
+        auth.createNewAdmin("italan.leal@upe.br", "password");
+        auth.login("italan.leal@upe.br", "password");
+
+        System.out.println(state.getCurrentUser());
+        auth.logout();
+        System.out.println(state.getCurrentUser());
     }
-    //vai commit
 }

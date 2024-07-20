@@ -1,5 +1,6 @@
 package br.upe.pojos;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class Subscription {
@@ -7,6 +8,7 @@ public class Subscription {
     private UUID uuid;
     private UUID sessionUuid;
     private UUID userUuid;
+    private Date date;
 
     public UUID getUuid() {
         return this.uuid;
@@ -25,5 +27,11 @@ public class Subscription {
     }
     public void setSessionUuid(UUID sessionUuid) {
         this.sessionUuid = sessionUuid;
+    }
+    public void setDate(Date date){
+        this.date = date;
+    }
+    public Date getDate(){
+        return this.date;
     }
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public abstract class User {
+    protected boolean isAdmin;
     protected String name;
     protected String password;
     protected String email;
@@ -26,4 +27,5 @@ public abstract class User {
     public abstract Collection<Subscription> getSubscriptions();
     public abstract void setSubscriptions(Collection<Subscription> subscriptions);
 
+    public abstract boolean isAdmin();
 }
