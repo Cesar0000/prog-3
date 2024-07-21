@@ -1,8 +1,6 @@
 package br.upe.operations;
 
-import br.upe.pojos.Submission;
-
-public interface InterfacesForCRUD {
+public interface CRUDInterface {
     static EventCRUD newEventCRUD() {
         return new EventCRUD();
     }
