@@ -49,7 +49,7 @@ public class EventCRUD extends ClassCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateEvent(UUID eventUuid, Event source) {
+    public void updateEvent(UUID eventUuid, GreatEvent source) {
         GreatEvent event = returnEvent(eventUuid);
         deleteEvent(eventUuid);
         HelperInterface.checkout(source, event);

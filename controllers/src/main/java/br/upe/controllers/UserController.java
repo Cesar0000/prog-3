@@ -11,7 +11,7 @@ public class UserController {
     private final StateController stateController;
     private final CRUDController crudController;
 
-    private void updateUserName(String userName){
+    public void updateUserName(String userName){
         User source;
         if(stateController.getCurrentUser() instanceof AdminUser){
             source = KeeperInterface.createAdminUser();
@@ -21,7 +21,7 @@ public class UserController {
         source.setName(userName);
         crudController.userCRUD.updateUser(stateController.getCurrentUser().getUuid(), source);
     }
-    private void updateUserEmail(String userEmail){
+    public void updateUserEmail(String userEmail){
         User source;
         if(stateController.getCurrentUser() instanceof AdminUser){
             source = KeeperInterface.createAdminUser();
@@ -31,7 +31,7 @@ public class UserController {
         source.setEmail(userEmail);
         crudController.userCRUD.updateUser(stateController.getCurrentUser().getUuid(), source);
     }
-    private void updateUserPassword(String userPassword){
+    public void updateUserPassword(String userPassword){
         User source;
         if(stateController.getCurrentUser() instanceof AdminUser){
             source = KeeperInterface.createAdminUser();
