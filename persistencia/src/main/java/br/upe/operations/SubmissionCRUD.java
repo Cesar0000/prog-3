@@ -2,60 +2,67 @@ package br.upe.operations;
 
 import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Submission;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+
 public class SubmissionCRUD extends BaseCRUD {
-    //private static final Logger logger = LoggerFactory.getLogger(SubmissionCRUD.class);
 
     public SubmissionCRUD() { super(); }
 
     public void createSubmission(Submission submission) {
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv", true))) {
+        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv", true))) {
             buffer.write(submission.getUuid().toString() + ";");
             buffer.write(submission.getEventUuid().toString() + ";");
             buffer.write(submission.getUserUuid().toString() + ";");
             buffer.write(submission.getDate().toInstant().toString() + ";");
 
             buffer.newLine();
-        } catch (IOException e) {
-            //logger.error("Erro ao criar submissão: ", e);
+        } catch(Exception e) {
+            e.printStackTrace();
+
         }
     }
 
     public void deleteSubmission(UUID submissionUuid) {
         ArrayList<String> fileCopy = new ArrayList<>();
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
-            while (buffer.ready()) {
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
+            while(buffer.ready()) {
                 fileCopy.add(buffer.readLine());
             }
-        } catch (IOException e) {
-            //logger.error("Erro ao ler submissões: ", e);
+        } catch(Exception e) {
+            e.printStackTrace();
         }
 
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv"))) {
+        try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv"))) {
             for (String line : fileCopy) {
                 if (line.contains(submissionUuid.toString())) continue;
                 buffer.write(line);
                 buffer.newLine();
             }
-        } catch (IOException e) {
-            //logger.error("Erro ao deletar submissão: ", e);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+
         }
     }
 
     public void updateSubmission(UUID submissionUuid, Submission source) {
-        Submission submission = returnSubmission(submissionUuid);
-        deleteSubmission(submission.getUuid());
-        HelperInterface.checkout(source, submission);
-        createSubmission(submission);
+        Submission existingSubmission = returnSubmission(submissionUuid);
+        if (existingSubmission == null) {
+            System.out.println("Submission not found for UUID: " + submissionUuid);
+            return;
+        }
+        deleteSubmission(submissionUuid);
+        HelperInterface.checkout(source, existingSubmission);
+        createSubmission(existingSubmission);
     }
 
     public static Submission returnSubmission(UUID submissionUuid) {
+
         try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
             while (buffer.ready()) {
                 String line = buffer.readLine();
@@ -63,10 +70,12 @@ public class SubmissionCRUD extends BaseCRUD {
                     return ParserInterface.parseSubmission(line);
                 }
             }
+
         } catch (IOException e) {}
 
         return null;
     }
+  
     public static Collection<Submission> returnSubmission() {
         Collection<Submission> submissions = new ArrayList<>();
 
@@ -78,6 +87,7 @@ public class SubmissionCRUD extends BaseCRUD {
                 }
             }
         } catch (IOException e) {}
+
 
         return submissions;
     }
