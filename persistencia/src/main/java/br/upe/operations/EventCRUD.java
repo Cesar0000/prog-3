@@ -1,17 +1,17 @@
 package br.upe.operations;
 import  br.upe.pojos.*;
-import org.w3c.dom.events.Event;
 
 import java.io.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EventCRUD extends ClassCRUD {
+public class EventCRUD extends BaseCRUD {
     public EventCRUD(){ super(); }
 
     public void createEvent(GreatEvent event){
@@ -49,55 +49,35 @@ public class EventCRUD extends ClassCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateEvent(UUID eventUuid, Event source) {
+    public void updateEvent(UUID eventUuid, GreatEvent source) {
         GreatEvent event = returnEvent(eventUuid);
         deleteEvent(eventUuid);
         HelperInterface.checkout(source, event);
         createEvent(event);
     }
     public static GreatEvent returnEvent(UUID eventUuid){
-        String rawEvent = "";
-
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
             while(buffer.ready()){
                 String line = buffer.readLine();
                 if(line.contains(eventUuid.toString())) {
-                    rawEvent = line;
-                    break;
+                    return ParserInterface.parseEvent(line);
                 }
-            };
+            }
         } catch (Exception e) {}
 
-        if(rawEvent.isEmpty()) return null;
-
-        GreatEvent newEvent = new GreatEvent();
-        newEvent.setSubmissions(new ArrayList<>());
-        newEvent.setSessions(new ArrayList<>());
-
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
-        Matcher matcher = pattern.matcher(rawEvent);
-
-        if(matcher.matches()) {
-            newEvent.setUuid(UUID.fromString(matcher.group(1)));
-            newEvent.setDescritor(matcher.group(3));
-            newEvent.setDirector(matcher.group(5));
-            newEvent.setStartDate(Date.from(Instant.parse(matcher.group(7))));
-            newEvent.setEndDate(Date.from(Instant.parse(matcher.group(9))));
-
-
-            String sessions = matcher.group(11);
-
-            for(String uuid : sessions.split(",")){
-                newEvent.addSession(SessionCRUD.returnSession(UUID.fromString(uuid)));
+        return null;
+    }
+    public static Collection<GreatEvent> returnEvent(){
+        Collection<GreatEvent> events = new ArrayList<>();
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
+            while(buffer.ready()){
+                String line = buffer.readLine();
+                if(line.isEmpty()) {
+                    events.add(ParserInterface.parseEvent(line));
+                }
             }
+        } catch (Exception e) {}
 
-            String submissions = matcher.group(11);
-
-            for(String uuid : submissions.split(",")){
-                newEvent.addSubmission(SubmissionCRUD.returnSubmission(UUID.fromString(uuid)));
-            }
-        }
-
-        return newEvent;
+        return events;
     }
 }

@@ -3,14 +3,13 @@ package br.upe.operations;
 import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Submission;
 import java.io.*;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class SubmissionCRUD extends ClassCRUD {
+
+public class SubmissionCRUD extends BaseCRUD {
+
     public SubmissionCRUD() { super(); }
 
     public void createSubmission(Submission submission) {
@@ -23,6 +22,7 @@ public class SubmissionCRUD extends ClassCRUD {
             buffer.newLine();
         } catch(Exception e) {
             e.printStackTrace();
+
         }
     }
 
@@ -43,8 +43,10 @@ public class SubmissionCRUD extends ClassCRUD {
                 buffer.write(line);
                 buffer.newLine();
             }
+
         } catch(Exception e) {
             e.printStackTrace();
+
         }
     }
 
@@ -60,33 +62,33 @@ public class SubmissionCRUD extends ClassCRUD {
     }
 
     public static Submission returnSubmission(UUID submissionUuid) {
-        String rawSubmission = "";
 
-        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
-            while(buffer.ready()) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
+            while (buffer.ready()) {
                 String line = buffer.readLine();
                 if (line.contains(submissionUuid.toString())) {
-                    rawSubmission = line;
-                    break;
+                    return ParserInterface.parseSubmission(line);
                 }
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
 
-        if(rawSubmission.isEmpty()) return null;
+        } catch (IOException e) {}
 
-        Submission newSubmission = new Submission();
-        Pattern pattern = Pattern.compile("(.*);(.*);(.*);(.*);");
-        Matcher matcher = pattern.matcher(rawSubmission);
+        return null;
+    }
+  
+    public static Collection<Submission> returnSubmission() {
+        Collection<Submission> submissions = new ArrayList<>();
 
-        if(matcher.matches()) {
-            newSubmission.setUuid(UUID.fromString(matcher.group(1)));
-            newSubmission.setEventUuid(UUID.fromString(matcher.group(2)));
-            newSubmission.setUserUuid(UUID.fromString(matcher.group(3)));
-            newSubmission.setDate(Date.from(Instant.parse(matcher.group(4))));
-        }
+        try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\submissions.csv"))) {
+            while (buffer.ready()) {
+                String line = buffer.readLine();
+                if (!line.isEmpty()) {
+                    submissions.add(ParserInterface.parseSubmission(line));
+                }
+            }
+        } catch (IOException e) {}
 
-        return newSubmission;
+
+        return submissions;
     }
 }
