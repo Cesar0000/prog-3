@@ -49,52 +49,59 @@ public class EventCRUD extends ClassCRUD {
             }
         } catch (Exception e) {}
     }
-    public void updateEvent(UUID eventUuid, Event source) {
+
+    public void updateEvent(UUID eventUuid, GreatEvent source) {  // Mundando de Event para GreatEvent
         GreatEvent event = returnEvent(eventUuid);
         deleteEvent(eventUuid);
         HelperInterface.checkout(source, event);
         createEvent(event);
     }
-    public static GreatEvent returnEvent(UUID eventUuid){
+
+    public static GreatEvent returnEvent(UUID eventUuid) {
         String rawEvent = "";
 
-        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
-            while(buffer.ready()){
+        try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))) {
+            while (buffer.ready()) {
                 String line = buffer.readLine();
-                if(line.contains(eventUuid.toString())) {
+                if (line.contains(eventUuid.toString())) {
                     rawEvent = line;
                     break;
                 }
-            };
-        } catch (Exception e) {}
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        if(rawEvent.isEmpty()) return null;
+        if (rawEvent.isEmpty()) return null;
 
         GreatEvent newEvent = new GreatEvent();
-        newEvent.setSubmissions(new ArrayList<>());
-        newEvent.setSessions(new ArrayList<>());
 
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
+        Pattern pattern = Pattern.compile("([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);");
         Matcher matcher = pattern.matcher(rawEvent);
 
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             newEvent.setUuid(UUID.fromString(matcher.group(1)));
-            newEvent.setDescritor(matcher.group(3));
-            newEvent.setDirector(matcher.group(5));
-            newEvent.setStartDate(Date.from(Instant.parse(matcher.group(7))));
-            newEvent.setEndDate(Date.from(Instant.parse(matcher.group(9))));
+            newEvent.setDescritor(matcher.group(2));
+            newEvent.setDirector(matcher.group(3));
+            newEvent.setStartDate(Date.from(Instant.parse(matcher.group(4))));
+            newEvent.setEndDate(Date.from(Instant.parse(matcher.group(5))));
 
-
-            String sessions = matcher.group(11);
-
-            for(String uuid : sessions.split(",")){
-                newEvent.addSession(SessionCRUD.returnSession(UUID.fromString(uuid)));
+            String sessions = matcher.group(6);
+            if (!sessions.isEmpty()) {
+                for (String uuid : sessions.split(",")) {
+                    if (!uuid.isEmpty()) {
+                        newEvent.addSession(SessionCRUD.returnSession(UUID.fromString(uuid)));
+                    }
+                }
             }
 
-            String submissions = matcher.group(11);
-
-            for(String uuid : submissions.split(",")){
-                newEvent.addSubmission(SubmissionCRUD.returnSubmission(UUID.fromString(uuid)));
+            String submissions = matcher.group(7);
+            if (!submissions.isEmpty()) {
+                for (String uuid : submissions.split(",")) {
+                    if (!uuid.isEmpty()) {
+                        newEvent.addSubmission(SubmissionCRUD.returnSubmission(UUID.fromString(uuid)));
+                    }
+                }
             }
         }
 
