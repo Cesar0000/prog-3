@@ -1,7 +1,6 @@
 package br.upe.controllers;
 
 import br.upe.pojos.*;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -62,6 +61,7 @@ public class EventController {
         submission.setUserUuid(stateController.getCurrentUser().getUuid());
         submission.setEventUuid(stateController.getCurrentEvent().getUuid());
         submission.setDescritor(descritor);
+        submission.setDate(new Date());
 
         stateController.getCurrentEvent().addSubmission(submission);
 
@@ -70,5 +70,11 @@ public class EventController {
 
         crudController.submissionCRUD.createSubmission(submission);
         crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), eventHandler);
+    }
+    public void changeCurrentEvent(UUID eventUuid){
+        stateController.setCurrentEvent(crudController.eventCRUD.returnEvent(eventUuid));
+    }
+    public void closeCurrentEvent(){
+        stateController.setCurrentEvent(null);
     }
 }

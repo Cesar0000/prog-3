@@ -1,8 +1,11 @@
 package br.upe.pojos;
 
-import java.lang.reflect.Field;
+import br.upe.operations.SubscriptionCRUD;
+
 import java.util.Collection;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommomUser extends User {
     protected final boolean isAdmin = false;
@@ -41,16 +44,4 @@ public class CommomUser extends User {
         this.subscriptions = subscriptions;
     }
     public boolean isAdmin() { return isAdmin; }
-    public User checkout(User source){
-        try {
-            Field[] fields = this.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.get(source) != null) field.set(this, field.get(source));
-            }
-        } catch (IllegalAccessException e){
-            System.out.println("Erro ao atualizar em: " + this.getClass());
-        }
-        return this;
-    }
 }
