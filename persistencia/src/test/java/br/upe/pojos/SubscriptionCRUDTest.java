@@ -124,7 +124,7 @@ public class SubscriptionCRUDTest {
         Collection<Subscription> subscriptions = SubscriptionCRUD.returnSubscription();
         assertEquals(2, subscriptions.size());
     }
-
+// Provavelmente vai virar um de teste
 //    private void deleteDirectoryRecursively(Path path) throws IOException {
 //        if (Files.exists(path)) {
 //            try (Stream<Path> paths = Files.walk(path)) {
