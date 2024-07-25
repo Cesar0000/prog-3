@@ -10,4 +10,3 @@ public class BaseCRUD {
         } catch (Exception e) {
         }
     }
-}

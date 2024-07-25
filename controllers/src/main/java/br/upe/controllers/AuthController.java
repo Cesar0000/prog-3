@@ -28,6 +28,7 @@ public class AuthController {
         crudController.userCRUD.createUser(user);
         return true;
     }
+
     public boolean createNewAdmin(String email, String password){
         if(QueryState.userFromEmail(email) != null) return false;
 
@@ -41,6 +42,7 @@ public class AuthController {
         crudController.userCRUD.createUser(user);
         return true;
     }
+
     public boolean login(String email, String password){
         User user = UserCRUD.returnUser(QueryState.userFromEmail(email));
         if(user != null && HasherInterface.hash(password).equals(user.getPassword())){
@@ -55,4 +57,5 @@ public class AuthController {
             return true;
         } return false;
     }
+
 }
