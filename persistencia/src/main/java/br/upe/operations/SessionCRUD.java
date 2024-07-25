@@ -14,14 +14,15 @@ public class SessionCRUD extends BaseCRUD {
 
     public void createSession(Session session){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\sessions.csv", true))){
-            buffer.write(session.getUuid().toString() + ";");
-            buffer.write( session.getEventUuid().toString() + ";");
-            buffer.write( session.getDescritor() + ";");
-            buffer.write( session.getStartDate().toInstant().toString() + ";");
-            buffer.write( session.getEndDate().toInstant().toString() + ";");
+            buffer.write(ParserInterface.validadeString(session.getUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(session.getEventUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(session.getDescritor()) + ";");
+            buffer.write(ParserInterface.validadeString(session.getStartDate().toInstant()) + ";");
+            buffer.write(ParserInterface.validadeString(session.getEndDate().toInstant()) + ";");
             for (Subscription sub : session.getSubscriptions()){
-                buffer.write(sub.getUuid().toString() + ",");
+                buffer.write(ParserInterface.validadeString(sub.getUuid()) + ",");
             }
+
             buffer.write(";");
 
             buffer.newLine();
@@ -33,7 +34,7 @@ public class SessionCRUD extends BaseCRUD {
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
             while(buffer.ready()){
                 fileCopy.add(buffer.readLine());
-            };
+            }
         } catch (Exception e) {}
 
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\sessions.csv"))){
@@ -53,7 +54,6 @@ public class SessionCRUD extends BaseCRUD {
     }
 
     public static Session returnSession(UUID sessionUuid){
-        String rawSession = "";
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\sessions.csv"))){
             while(buffer.ready()){
@@ -61,7 +61,7 @@ public class SessionCRUD extends BaseCRUD {
                 if(line.contains(sessionUuid.toString())) {
                     return ParserInterface.parseSession(line);
                 }
-            };
+            }
         } catch (Exception e) {}
 
         return null;
@@ -74,7 +74,7 @@ public class SessionCRUD extends BaseCRUD {
                 if(!line.isEmpty()) {
                     sessions.add(ParserInterface.parseSession(line));
                 }
-            };
+            }
         } catch (Exception e) {}
 
         return sessions;

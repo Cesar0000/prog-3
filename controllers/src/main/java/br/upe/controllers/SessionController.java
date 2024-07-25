@@ -16,7 +16,7 @@ public class SessionController {
     private final CRUDController crudController;
 
     public boolean createNewSession(String descritor){
-        if(stateController.getCurrentUser() instanceof AdminUser user){
+        if(stateController.getCurrentUser() instanceof AdminUser){
 
             Session session = KeeperInterface.createSession();
             session.setUuid(UUID.randomUUID());
@@ -63,7 +63,7 @@ public class SessionController {
         stateController.getCurrentUser().getSubscriptions().add(subscription);
 
         User userHandler;
-        if(stateController.getCurrentUser() instanceof AdminUser user){
+        if(stateController.getCurrentUser() instanceof AdminUser){
             userHandler = KeeperInterface.createAdminUser();
         } else {
             userHandler = KeeperInterface.createCommomUser();

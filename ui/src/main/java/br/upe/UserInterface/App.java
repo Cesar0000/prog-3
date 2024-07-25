@@ -2,6 +2,7 @@ package br.upe.UserInterface;
 
 import br.upe.controllers.AuthController;
 
+
 import br.upe.controllers.CRUDController;
 import br.upe.controllers.EventController;
 import br.upe.controllers.SessionController;
