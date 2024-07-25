@@ -1,75 +1,62 @@
 package br.upe.UserInterface;
 
+import br.upe.controllers.AuthController;
 import br.upe.controllers.EventController;
 import br.upe.controllers.SessionController;
-import br.upe.controllers.StateController;
-import br.upe.pojos.AdminUser;
-import br.upe.pojos.User;
+import br.upe.controllers.UserController;
 
 import java.util.Scanner;
 
 public class AppMenu {
-    private final StateController stateController;
-    private final EventController eventController;
-    private final SessionController sessionController;
-    private final Scanner scanner;
+    private final LoginMenu loginMenu;
+    private final MainMenu mainMenu;
+    private final SessionMenu sessionMenu;
+    private final EventMenu eventMenu;
+    private final Scanner scanner = new Scanner(System.in);
 
-    public AppMenu(StateController stateController, EventController eventController, SessionController sessionController) {
-        this.stateController = stateController;
-        this.eventController = eventController;
-        this.sessionController = sessionController;
-        this.scanner = new Scanner(System.in);
+    public AppMenu(AuthController authController, UserController userController, EventController eventController, SessionController sessionController) {
+        this.loginMenu = new LoginMenu(authController);
+        this.mainMenu = new MainMenu(userController, eventController, sessionController, loginMenu);
+        this.sessionMenu = new SessionMenu(sessionController);
+        this.eventMenu = new EventMenu(eventController);
     }
 
     public void displayAppMenu() {
         boolean running = true;
+
         while (running) {
-            User currentUser = stateController.getCurrentUser();
-            System.out.println("Menu Principal:");
-            if (currentUser != null) {
-                System.out.println("Bem-vindo, " + currentUser.getName());
-                if (currentUser instanceof AdminUser) {
-                    System.out.println("1. Menu de Eventos");
-                    System.out.println("2. Menu de Sessões");
-                }
-                System.out.println("3. Menu de Cadastro");
-                System.out.println("4. Sair");
-                System.out.print("Escolha uma opção: ");
+            System.out.println("App Menu:");
+            System.out.println("1. Menu de Login");
+            System.out.println("2. Menu Principal");
+            System.out.println("3. Menu de Sessões");
+            System.out.println("4. Menu de Eventos");
+            System.out.println("5. Sair");
+            System.out.print("Escolha uma opção: ");
 
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-                switch (choice) {
-                    case 1:
-                        if (currentUser instanceof AdminUser) {
-                            EventMenu eventMenu = new EventMenu(eventController, stateController);
-                            eventMenu.displayEventMenu();
-                        } else {
-                            System.out.println("Acesso negado. Somente administradores podem acessar este menu.");
-                        }
-                        break;
-                    case 2:
-                        if (currentUser instanceof AdminUser) {
-                            SessionMenu sessionMenu = new SessionMenu(sessionController, stateController);
-                            sessionMenu.displaySessionMenu();
-                        } else {
-                            System.out.println("Acesso negado. Somente administradores podem acessar este menu.");
-                        }
-                        break;
-                    case 3:
-                        CadastroMenu cadastroMenu = new CadastroMenu(eventController, sessionController, stateController);
-                        cadastroMenu.displayCadastroMenu();
-                        break;
-                    case 4:
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Opção inválida. Tente novamente.");
-                }
-            } else {
-                System.out.println("Usuário não autenticado.");
-                running = false;
+            switch (choice) {
+                case 1:
+                    loginMenu.displayLoginMenu();
+                    break;
+                case 2:
+                    mainMenu.displayMainMenu();
+                    break;
+                case 3:
+                    sessionMenu.displaySessionMenu();
+                    break;
+                case 4:
+                    eventMenu.displayEventMenu();
+                    break;
+                case 5:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
             }
         }
+
+        System.out.println("Aplicação encerrada.");
     }
 }
