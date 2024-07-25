@@ -3,10 +3,7 @@ package br.upe.controllers;
 import br.upe.operations.HasherInterface;
 import br.upe.operations.QueryState;
 import br.upe.operations.UserCRUD;
-import br.upe.pojos.AdminUser;
-import br.upe.pojos.CommomUser;
-import br.upe.pojos.KeeperInterface;
-import br.upe.pojos.User;
+import br.upe.pojos.*;
 
 import java.util.ArrayList;
 import java.util.UUID;

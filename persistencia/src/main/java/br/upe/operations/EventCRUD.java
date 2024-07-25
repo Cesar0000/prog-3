@@ -17,8 +17,8 @@ public class EventCRUD extends BaseCRUD {
             buffer.write(ParserInterface.validadeString(event.getUuid()) + ";");
             buffer.write(ParserInterface.validadeString(event.getDescritor()) + ";");
             buffer.write(ParserInterface.validadeString(event.getDirector()) + ";");
-            buffer.write(ParserInterface.validadeString(event.getStartDate().toInstant()) + ";");
-            buffer.write(ParserInterface.validadeString(event.getEndDate().toInstant()) + ";");
+            buffer.write((event.getStartDate() != null ? event.getStartDate().toInstant().toString(): "") + ";");
+            buffer.write((event.getEndDate() != null ? event.getEndDate().toInstant().toString(): "") + ";");
 
             for (Session session : event.getSessions()){
                 buffer.write(ParserInterface.validadeString(session.getUuid()) + ",");

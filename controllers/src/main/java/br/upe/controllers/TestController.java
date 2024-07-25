@@ -1,6 +1,7 @@
 package br.upe.controllers;
 
 import br.upe.operations.SubmissionCRUD;
+import br.upe.pojos.AdminUser;
 import br.upe.pojos.KeeperInterface;
 import br.upe.pojos.Submission;
 import br.upe.pojos.User;
@@ -25,11 +26,12 @@ public class TestController {
 
         event.createNewEvent("SUPER | 2024", "Tárcio");
         auth.logout();
-/*
+
+
         auth.login("julio.mota@upe.br", "senhas");
         event.addEventSubmission("Algorítimo genético para análise de subgrupo");
 
         Collection<Submission> sub1 = sub.getAllSubmissionsByUser(state.getCurrentUser().getUuid());
-        sub.removeSubmission(sub1.iterator().next().getUuid());*/
+        sub.removeSubmission(sub1.iterator().next().getUuid());
     }
 }

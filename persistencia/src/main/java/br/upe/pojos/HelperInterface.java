@@ -14,8 +14,8 @@ public interface HelperInterface {
 
     static <T> void checkout(T source, T destination){
         Method[] methods = source.getClass().getMethods();
-        try {
-            for (Method getter : methods) {
+        for (Method getter : methods) {
+            try{
                 if (!HelperInterface.isGetter(getter)) continue;
 
                 Object value = getter.invoke(source);
@@ -27,9 +27,10 @@ public interface HelperInterface {
                         break;
                     }
                 }
+            } catch (Exception e) {
+                System.out.println("Error while checkouting: " + source.getClass().getName() );
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.out.println("Error while checkouting");
         }
     }
 }
