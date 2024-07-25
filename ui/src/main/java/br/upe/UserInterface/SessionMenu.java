@@ -2,41 +2,33 @@ package br.upe.UserInterface;
 
 import br.upe.controllers.SessionController;
 import br.upe.controllers.StateController;
-import br.upe.pojos.AdminUser;
 
 import java.util.Date;
 import java.util.Scanner;
 
 public class SessionMenu {
-    private final SessionController sessionController;
-    private final Scanner scanner;
-    private final StateController stateController;
 
-    public SessionMenu(SessionController sessionController, StateController stateController) {
+    private final SessionController sessionController;
+    private StateController stateController = null;
+    private final Scanner scanner = new Scanner(System.in);
+
+    public SessionMenu(SessionController sessionController) {
         this.sessionController = sessionController;
-        this.scanner = new Scanner(System.in);
         this.stateController = stateController;
     }
 
     public void displaySessionMenu() {
-        if (!(stateController.getCurrentUser() instanceof AdminUser)) {
-            System.out.println("Acesso negado. Somente administradores podem acessar este menu.");
-            return;
-        }
-
         boolean running = true;
         while (running) {
-            System.out.println("Menu de Sessão:");
-            System.out.println("1. Criar nova sessão");
-            System.out.println("2. Atualizar descritor da sessão");
-            System.out.println("3. Atualizar data de início da sessão");
-            System.out.println("4. Atualizar data de término da sessão");
-            System.out.println("5. Adicionar inscrição à sessão");
-            System.out.println("6. Voltar ao menu principal");
-            System.out.print("Escolha uma opção: ");
+            System.out.println("Session Menu");
+            System.out.println("1. Create New Session");
+            System.out.println("2. Update Session Descritor");
+            System.out.println("3. Update Session Start Date");
+            System.out.println("4. Update Session End Date");
+            System.out.println("5. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine();  // Consume newline
 
             switch (choice) {
                 case 1:
@@ -52,58 +44,70 @@ public class SessionMenu {
                     updateSessionEndDate();
                     break;
                 case 5:
-                    addSessionSubscription();
-                    break;
-                case 6:
                     running = false;
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
     private void createNewSession() {
-        System.out.print("Digite o descritor da nova sessão: ");
+        System.out.println("Enter session descritor:");
         String descritor = scanner.nextLine();
         if (sessionController.createNewSession(descritor)) {
-            System.out.println("Sessão criada com sucesso.");
+            System.out.println("Session created successfully.");
         } else {
-            System.out.println("Falha ao criar sessão.");
+            System.out.println("Failed to create session. Ensure you are logged in as an admin.");
         }
     }
 
     private void updateSessionDescritor() {
-        System.out.print("Digite o novo descritor da sessão: ");
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
+        }
+        System.out.println("Enter new session descritor:");
         String descritor = scanner.nextLine();
         sessionController.updateSessionDescritor(descritor);
-        System.out.println("Descritor da sessão atualizado com sucesso.");
+        System.out.println("Session descritor updated.");
     }
 
     private void updateSessionStartDate() {
-        System.out.print("Digite a nova data de início (YYYY-MM-DD): ");
-        String dateString = scanner.nextLine();
-        Date startDate = java.sql.Date.valueOf(dateString);
-        if (sessionController.updateSessionStartDate(startDate)) {
-            System.out.println("Data de início da sessão atualizada com sucesso.");
-        } else {
-            System.out.println("Data de início inválida.");
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
+        }
+        System.out.println("Enter new start date (yyyy-MM-dd):");
+        String startDateStr = scanner.nextLine();
+        try {
+            Date startDate = new Date(startDateStr);  // Simplified date parsing
+            if (sessionController.updateSessionStartDate(startDate)) {
+                System.out.println("Session start date updated.");
+            } else {
+                System.out.println("Invalid start date. It must be after the event start date.");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format.");
         }
     }
 
     private void updateSessionEndDate() {
-        System.out.print("Digite a nova data de término (YYYY-MM-DD): ");
-        String dateString = scanner.nextLine();
-        Date endDate = java.sql.Date.valueOf(dateString);
-        if (sessionController.updateSessionEndDate(endDate)) {
-            System.out.println("Data de término da sessão atualizada com sucesso.");
-        } else {
-            System.out.println("Data de término inválida.");
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
         }
-    }
-
-    private void addSessionSubscription() {
-        sessionController.addSessionsSubscription();
-        System.out.println("Inscrição adicionada à sessão.");
+        System.out.println("Enter new end date (yyyy-MM-dd):");
+        String endDateStr = scanner.nextLine();
+        try {
+            Date endDate = new Date(endDateStr);  // Simplified date parsing
+            if (sessionController.updateSessionEndDate(endDate)) {
+                System.out.println("Session end date updated.");
+            } else {
+                System.out.println("Invalid end date. It must be before the event end date.");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format.");
+        }
     }
 }
