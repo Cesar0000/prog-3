@@ -5,6 +5,7 @@ import br.upe.pojos.KeeperInterface;
 import br.upe.pojos.Submission;
 import br.upe.pojos.Subscription;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,16 +26,26 @@ public class SubmissionController {
 
     public Collection<Submission> getAllSubmissionsByUser(UUID userUuid) {
         Collection<Submission> submissions = getAllSubmissions();
-        return submissions.stream()
-                .filter(submission -> submission.getUserUuid().equals(userUuid))
-                .collect(Collectors.toList());
+        Collection<Submission> filtered = new ArrayList<>();
+
+        for(Submission submission : submissions) {
+            if(submission.getUserUuid().equals(userUuid)) {
+                filtered.add(submission);
+            }
+        }
+        return filtered;
     }
 
     public Collection<Submission> getAllSubmissionsByEvent(UUID eventUuid) {
         Collection<Submission> submissions = getAllSubmissions();
-        return submissions.stream()
-                .filter(submission -> submission.getUserUuid().equals(eventUuid))
-                .collect(Collectors.toList());
+        Collection<Submission> filtered = new ArrayList<>();
+
+        for(Submission submission : submissions) {
+            if(submission.getUserUuid().equals(eventUuid)) {
+                filtered.add(submission);
+            }
+        }
+        return filtered;
     }
 
     public void removeSubmission(UUID submissionUuid) {

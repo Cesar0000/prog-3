@@ -14,7 +14,7 @@ public class SubmissionCRUD extends BaseCRUD {
 
     public void createSubmission(Submission submission) {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv", true))) {
-
+            buffer.write(ParserInterface.validadeString(submission.getUuid()) + ";");
             buffer.write(ParserInterface.validadeString(submission.getDescritor()) + ";");
             buffer.write(ParserInterface.validadeString(submission.getEventUuid()) + ";");
             buffer.write(ParserInterface.validadeString(submission.getUserUuid()) + ";");
@@ -83,7 +83,8 @@ public class SubmissionCRUD extends BaseCRUD {
             while (buffer.ready()) {
                 String line = buffer.readLine();
                 if (!line.isEmpty()) {
-                    submissions.add(ParserInterface.parseSubmission(line));
+                    Submission newSubmission = ParserInterface.parseSubmission(line);
+                    if(newSubmission != null) submissions.add(newSubmission);
                 }
             }
         } catch (IOException e) {}

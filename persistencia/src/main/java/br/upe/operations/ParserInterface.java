@@ -25,11 +25,11 @@ public interface ParserInterface {
         Matcher matcher = pattern.matcher(rawInput);
 
         if (matcher.matches()) {
-            newSubmission.setUuid(UUID.fromString(matcher.group(1)));
-            newSubmission.setDescritor(matcher.group(3));
-            newSubmission.setEventUuid(UUID.fromString(matcher.group(5)));
-            newSubmission.setUserUuid(UUID.fromString(matcher.group(7)));
-            newSubmission.setDate(Date.from(Instant.parse(matcher.group(9))));
+            if(!matcher.group(1).isEmpty()) newSubmission.setUuid(UUID.fromString(matcher.group(1)));
+            if(!matcher.group(1).isEmpty()) newSubmission.setDescritor(matcher.group(3));
+            if(!matcher.group(1).isEmpty()) newSubmission.setEventUuid(UUID.fromString(matcher.group(5)));
+            if(!matcher.group(1).isEmpty()) newSubmission.setUserUuid(UUID.fromString(matcher.group(7)));
+            if(!matcher.group(1).isEmpty()) newSubmission.setDate(Date.from(Instant.parse(matcher.group(9))));
         } else {
             return null;
         }
@@ -37,7 +37,9 @@ public interface ParserInterface {
         return newSubmission;
     }
     static User parseUser(String rawInput){
-        if(rawInput.isEmpty()) return null;
+        if(rawInput.isEmpty()) {
+            return null;
+        };
 
         Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawInput);
@@ -45,15 +47,18 @@ public interface ParserInterface {
 
         if(matcher.matches() && matcher.group(9).equals("true")){
             newUser = new AdminUser();
+            ((AdminUser)newUser).setEvents(new ArrayList<GreatEvent>());
+            newUser.setSubscriptions(new ArrayList<>());
         } else {
             newUser = new CommomUser();
+            newUser.setSubscriptions(new ArrayList<>());
         }
 
         if(matcher.matches()){
-            newUser.setUuid(UUID.fromString(matcher.group(1)));
-            newUser.setEmail(matcher.group(3));
-            newUser.setPassword(matcher.group(5));
-            newUser.setName(matcher.group(7));
+            if(!matcher.group(1).isEmpty()) newUser.setUuid(UUID.fromString(matcher.group(1)));
+            if(!matcher.group(3).isEmpty()) newUser.setEmail(matcher.group(3));
+            if(!matcher.group(5).isEmpty()) newUser.setPassword(matcher.group(5));
+            if(!matcher.group(7).isEmpty()) newUser.setName(matcher.group(7));
             for (String subscription : matcher.group(11).split(",")){
                 if(!subscription.isEmpty()) newUser.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(subscription)));
             }
@@ -63,6 +68,7 @@ public interface ParserInterface {
                 }
             }
         } else {
+            System.out.println("we do not get metch");
             return null;
         }
         return newUser;
@@ -75,10 +81,10 @@ public interface ParserInterface {
 
         Matcher matcher = pattern.matcher(rawInput);
         if(matcher.matches()){
-            newSubscription.setUuid(UUID.fromString(matcher.group(1)));
-            newSubscription.setSessionUuid(UUID.fromString(matcher.group(3)));
-            newSubscription.setUserUuid(UUID.fromString(matcher.group(5)));
-            newSubscription.setDate(Date.from(Instant.parse(matcher.group(7))));
+            if(!matcher.group(1).isEmpty()) newSubscription.setUuid(UUID.fromString(matcher.group(1)));
+            if(!matcher.group(3).isEmpty()) newSubscription.setSessionUuid(UUID.fromString(matcher.group(3)));
+            if(!matcher.group(5).isEmpty()) newSubscription.setUserUuid(UUID.fromString(matcher.group(5)));
+            if(!matcher.group(7).isEmpty()) newSubscription.setDate(Date.from(Instant.parse(matcher.group(7))));
         } else {
             return null;
         }
@@ -96,16 +102,16 @@ public interface ParserInterface {
         Matcher matcher = pattern.matcher(rawInput);
 
         if(matcher.matches()) {
-            newSession.setUuid(UUID.fromString(matcher.group(1)));
-            newSession.setEventUuid(UUID.fromString(matcher.group(3)));
-            newSession.setDescritor(matcher.group(5));
-            newSession.setStartDate(Date.from(Instant.parse(matcher.group(7))));
-            newSession.setEndDate(Date.from(Instant.parse(matcher.group(9))));
+            if(!matcher.group(1).isEmpty()) newSession.setUuid(UUID.fromString(matcher.group(1)));
+            if(!matcher.group(3).isEmpty()) newSession.setEventUuid(UUID.fromString(matcher.group(3)));
+            if(!matcher.group(5).isEmpty()) newSession.setDescritor(matcher.group(5));
+            if(!matcher.group(7).isEmpty()) newSession.setStartDate(Date.from(Instant.parse(matcher.group(7))));
+            if(!matcher.group(9).isEmpty()) newSession.setEndDate(Date.from(Instant.parse(matcher.group(9))));
 
             String subscriptions = matcher.group(11);
 
             for(String uuid : subscriptions.split(",")){
-                newSession.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(uuid)));
+                if(!uuid.isEmpty()) newSession.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(uuid)));
             }
         } else {
             return null;
@@ -115,7 +121,9 @@ public interface ParserInterface {
     }
 
     static GreatEvent parseEvent(String rawInput){
-        if(rawInput.isEmpty()) return null;
+        if(rawInput.isEmpty()) {
+            return null;
+        }
 
         GreatEvent newEvent = new GreatEvent();
         newEvent.setSubmissions(new ArrayList<>());
@@ -125,11 +133,11 @@ public interface ParserInterface {
         Matcher matcher = pattern.matcher(rawInput);
 
         if(matcher.matches()) {
-            newEvent.setUuid(UUID.fromString(matcher.group(1)));
-            newEvent.setDescritor(matcher.group(3));
-            newEvent.setDirector(matcher.group(5));
-            newEvent.setStartDate(Date.from(Instant.parse(matcher.group(7))));
-            newEvent.setEndDate(Date.from(Instant.parse(matcher.group(9))));
+            if(!matcher.group(1).isEmpty()) newEvent.setUuid(UUID.fromString(matcher.group(1)));
+            if(!matcher.group(3).isEmpty()) newEvent.setDescritor(matcher.group(3));
+            if(!matcher.group(5).isEmpty()) newEvent.setDirector(matcher.group(5));
+            if(!matcher.group(7).isEmpty()) newEvent.setStartDate(Date.from(Instant.parse(matcher.group(7))));
+            if(!matcher.group(9).isEmpty()) newEvent.setEndDate(Date.from(Instant.parse(matcher.group(9))));
 
 
             String sessions = matcher.group(11);
@@ -138,8 +146,7 @@ public interface ParserInterface {
                 if(!uuid.isEmpty()) newEvent.addSession(SessionCRUD.returnSession(UUID.fromString(uuid)));
             }
 
-            String submissions = matcher.group(11);
-
+            String submissions = matcher.group(13);
             for(String uuid : submissions.split(",")){
                 if(!uuid.isEmpty()) newEvent.addSubmission(SubmissionCRUD.returnSubmission(UUID.fromString(uuid)));
             }
