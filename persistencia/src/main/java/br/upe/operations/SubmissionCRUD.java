@@ -14,15 +14,15 @@ public class SubmissionCRUD extends BaseCRUD {
 
     public void createSubmission(Submission submission) {
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\submissions.csv", true))) {
-            buffer.write(submission.getUuid().toString() + ";");
-            buffer.write(submission.getEventUuid().toString() + ";");
-            buffer.write(submission.getUserUuid().toString() + ";");
-            buffer.write(submission.getDate().toInstant().toString() + ";");
+
+            buffer.write(ParserInterface.validadeString(submission.getDescritor()) + ";");
+            buffer.write(ParserInterface.validadeString(submission.getEventUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(submission.getUserUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(submission.getDate().toInstant()) + ";");
 
             buffer.newLine();
         } catch(Exception e) {
             e.printStackTrace();
-
         }
     }
 

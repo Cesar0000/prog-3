@@ -10,25 +10,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface ParserInterface {
-    public static Submission parseSubmission(String rawInput){
+    static <T> String validadeString(T str) {
+        if (str == null){
+            return "";
+        }
+        return str.toString();
+    }
+
+    static Submission parseSubmission(String rawInput){
         if(rawInput.isEmpty()) return null;
 
         Submission newSubmission = new Submission();
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
+        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
         Matcher matcher = pattern.matcher(rawInput);
 
         if (matcher.matches()) {
             newSubmission.setUuid(UUID.fromString(matcher.group(1)));
-            newSubmission.setEventUuid(UUID.fromString(matcher.group(3)));
-            newSubmission.setUserUuid(UUID.fromString(matcher.group(5)));
-            newSubmission.setDate(Date.from(Instant.parse(matcher.group(7))));
+            newSubmission.setDescritor(matcher.group(3));
+            newSubmission.setEventUuid(UUID.fromString(matcher.group(5)));
+            newSubmission.setUserUuid(UUID.fromString(matcher.group(7)));
+            newSubmission.setDate(Date.from(Instant.parse(matcher.group(9))));
         } else {
             return null;
         }
 
         return newSubmission;
     }
-    public static User parseUser(String rawInput){
+    static User parseUser(String rawInput){
         if(rawInput.isEmpty()) return null;
 
         Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
@@ -59,7 +67,7 @@ public interface ParserInterface {
         }
         return newUser;
     }
-    public static Subscription parseSubscription(String rawInput){
+    static Subscription parseSubscription(String rawInput){
         if(rawInput.isEmpty()) return null;
 
         Subscription newSubscription = new Subscription();
@@ -78,7 +86,7 @@ public interface ParserInterface {
         return newSubscription;
     }
 
-    public static Session parseSession(String rawInput){
+    static Session parseSession(String rawInput){
         if(rawInput.isEmpty()) return null;
 
         Session newSession = new Session();
@@ -106,7 +114,7 @@ public interface ParserInterface {
         return newSession;
     }
 
-    public static GreatEvent parseEvent(String rawInput){
+    static GreatEvent parseEvent(String rawInput){
         if(rawInput.isEmpty()) return null;
 
         GreatEvent newEvent = new GreatEvent();
