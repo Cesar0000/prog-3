@@ -15,25 +15,21 @@ public class TestController {
         CRUDController crud = new CRUDController();
 
         AuthController auth = new AuthController(state, crud);
+        EventController event = new EventController(state, crud);
+        SubmissionController sub = new SubmissionController(state, crud);
 
         auth.createNewAdmin("italan.leal@upe.br", "password");
-        auth.createNewUser("iaa.@uc.br", "senhas");
+        auth.createNewUser("julio.mota@upe.br", "senhas");
+
         auth.login("italan.leal@upe.br", "password");
-        Submission sub1 = KeeperInterface.createSubmission();
 
-        sub1.setDescritor("Pipipi popopo");
-        sub1.setDate(new Date());
-        sub1.setUuid(UUID.randomUUID());
-
-        crud.submissionCRUD.createSubmission(sub1);
-
-        System.out.println(state.getCurrentUser());
+        event.createNewEvent("SUPER | 2024", "Tárcio");
         auth.logout();
-        System.out.println(state.getCurrentUser());
+/*
+        auth.login("julio.mota@upe.br", "senhas");
+        event.addEventSubmission("Algorítimo genético para análise de subgrupo");
 
-        Collection<User> users = crud.userCRUD.returnUser();
-        for(User user: users){
-            System.out.println(user.getPassword());
-        }
+        Collection<Submission> sub1 = sub.getAllSubmissionsByUser(state.getCurrentUser().getUuid());
+        sub.removeSubmission(sub1.iterator().next().getUuid());*/
     }
 }
