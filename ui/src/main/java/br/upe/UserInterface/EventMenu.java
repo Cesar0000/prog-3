@@ -2,42 +2,37 @@ package br.upe.UserInterface;
 
 import br.upe.controllers.EventController;
 import br.upe.controllers.StateController;
-import br.upe.pojos.AdminUser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
 public class EventMenu {
-    private final EventController eventController;
-    private final Scanner scanner;
-    private final StateController stateController;
 
-    public EventMenu(EventController eventController, StateController stateController) {
+    private final EventController eventController;
+    private StateController stateController = null;
+    private final Scanner scanner = new Scanner(System.in);
+
+    public EventMenu(EventController eventController) {
         this.eventController = eventController;
-        this.scanner = new Scanner(System.in);
         this.stateController = stateController;
     }
 
     public void displayEventMenu() {
-        if (!(stateController.getCurrentUser() instanceof AdminUser)) {
-            System.out.println("Acesso negado. Somente administradores podem acessar este menu.");
-            return;
-        }
-
         boolean running = true;
         while (running) {
-            System.out.println("Menu de Evento:");
-            System.out.println("1. Criar novo evento");
-            System.out.println("2. Atualizar descritor do evento");
-            System.out.println("3. Atualizar diretor do evento");
-            System.out.println("4. Atualizar data de início do evento");
-            System.out.println("5. Atualizar data de término do evento");
-            System.out.println("6. Adicionar submissão ao evento");
-            System.out.println("7. Voltar ao menu principal");
-            System.out.print("Escolha uma opção: ");
+            System.out.println("Event Menu");
+            System.out.println("1. Create New Event");
+            System.out.println("2. Update Event Descritor");
+            System.out.println("3. Update Event Director");
+            System.out.println("4. Update Event Start Date");
+            System.out.println("5. Update Event End Date");
+            System.out.println("6. Add Submission to Event");
+            System.out.println("7. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine();  // Consume newline
 
             switch (choice) {
                 case 1:
@@ -62,57 +57,85 @@ public class EventMenu {
                     running = false;
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
     private void createNewEvent() {
-        System.out.print("Digite o descritor do novo evento: ");
+        System.out.println("Enter event descritor:");
         String descritor = scanner.nextLine();
-        System.out.print("Digite o diretor do novo evento: ");
+        System.out.println("Enter event director:");
         String director = scanner.nextLine();
         if (eventController.createNewEvent(descritor, director)) {
-            System.out.println("Evento criado com sucesso.");
+            System.out.println("Event created successfully.");
         } else {
-            System.out.println("Falha ao criar evento.");
+            System.out.println("Failed to create event. Ensure you are logged in as an admin.");
         }
     }
 
     private void updateEventDescritor() {
-        System.out.print("Digite o novo descritor do evento: ");
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new event descritor:");
         String descritor = scanner.nextLine();
         eventController.updateEventDescritor(descritor);
-        System.out.println("Descritor do evento atualizado com sucesso.");
+        System.out.println("Event descritor updated.");
     }
 
     private void updateEventDirector() {
-        System.out.print("Digite o novo diretor do evento: ");
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new event director:");
         String director = scanner.nextLine();
         eventController.updateEventDirector(director);
-        System.out.println("Diretor do evento atualizado com sucesso.");
+        System.out.println("Event director updated.");
     }
 
     private void updateEventStartDate() {
-        System.out.print("Digite a nova data de início (YYYY-MM-DD): ");
-        String dateString = scanner.nextLine();
-        Date startDate = java.sql.Date.valueOf(dateString);
-        eventController.updateEventStartDate(startDate);
-        System.out.println("Data de início do evento atualizada com sucesso.");
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new start date (yyyy-MM-dd):");
+        String startDateStr = scanner.nextLine();
+        try {
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+            eventController.updateEventStartDate(startDate);
+            System.out.println("Event start date updated.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
     }
 
     private void updateEventEndDate() {
-        System.out.print("Digite a nova data de término (YYYY-MM-DD): ");
-        String dateString = scanner.nextLine();
-        Date endDate = java.sql.Date.valueOf(dateString);
-        eventController.updateEventEndDate(endDate);
-        System.out.println("Data de término do evento atualizada com sucesso.");
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new end date (yyyy-MM-dd):");
+        String endDateStr = scanner.nextLine();
+        try {
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+            eventController.updateEventEndDate(endDate);
+            System.out.println("Event end date updated.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
     }
 
     private void addEventSubmission() {
-        System.out.print("Digite o descritor da submissão: ");
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter submission descritor:");
         String descritor = scanner.nextLine();
         eventController.addEventSubmission(descritor);
-        System.out.println("Submissão adicionada ao evento.");
+        System.out.println("Submission added to event.");
     }
 }
