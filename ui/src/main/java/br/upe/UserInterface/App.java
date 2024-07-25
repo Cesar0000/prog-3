@@ -1,6 +1,7 @@
 package br.upe.UserInterface;
 
 import br.upe.controllers.AuthController;
+
 import br.upe.controllers.CRUDController;
 import br.upe.controllers.EventController;
 import br.upe.controllers.SessionController;
@@ -20,5 +21,6 @@ public class App {
         MainMenu mainMenu = new MainMenu(userController, eventController, sessionController, loginMenu);
 
         mainMenu.displayMainMenu();
+
     }
 }
