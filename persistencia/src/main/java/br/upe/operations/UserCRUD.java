@@ -13,21 +13,22 @@ public class UserCRUD extends BaseCRUD {
 
     public void createUser(User user){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\users.csv", true))){
-            buffer.write(user.getUuid().toString() + ";");
-            buffer.write( user.getEmail() + ";");
-            buffer.write( user.getPassword() + ";");
-            buffer.write(user.getName() + ";" );
-            buffer.write(user.isAdmin() + ";");
+            buffer.write(ParserInterface.validadeString(user.getUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(user.getEmail()) + ";");
+            buffer.write(ParserInterface.validadeString(user.getPassword()) + ";");
+            buffer.write(ParserInterface.validadeString(user.getName()) + ";");
+            buffer.write(ParserInterface.validadeString(user.isAdmin()) + ";");
 
             for (Subscription sub : user.getSubscriptions()){
-                buffer.write(sub.getUuid().toString() + ",");
+                buffer.write(ParserInterface.validadeString(sub.getUuid()) + ",");
             }
             buffer.write(";");
-            if(user instanceof AdminUser userHandler){
+            if (user instanceof AdminUser userHandler){
                 for (GreatEvent event : userHandler.getEvents()){
-                    buffer.write(event.getUuid().toString() + ",");
+                    buffer.write(ParserInterface.validadeString(event.getUuid()) + ",");
                 }
             }
+
             buffer.write(";");
 
             buffer.newLine();

@@ -12,21 +12,22 @@ public class SubscriptionCRUD extends BaseCRUD {
 
     public void createSubscription(Subscription subscription){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\subscriptions.csv", true))){
-            buffer.write(subscription.getUuid().toString() + ";");
-            buffer.write( subscription.getSessionUuid().toString() + ";");
-            buffer.write( subscription.getUserUuid().toString() + ";");
-            buffer.write( subscription.getDate().toInstant().toString() + ";");
+            buffer.write(ParserInterface.validadeString(subscription.getUuid()) + ";");
+            buffer.write(ParserInterface.validadeString(subscription.getSessionUuid().toString()) + ";");
+            buffer.write(ParserInterface.validadeString(subscription.getUserUuid().toString()) + ";");
+            buffer.write(ParserInterface.validadeString(subscription.getDate().toInstant().toString()) + ";");
 
             buffer.newLine();
         } catch (Exception e) {}
     }
+
     public void deleteSubscription(UUID subscriptionUuid){
         ArrayList<String> fileCopy = new ArrayList<>();
 
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\subscriptions.csv"))){
             while(buffer.ready()){
                 fileCopy.add(buffer.readLine());
-            };
+            }
         } catch (Exception e) {}
 
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\subscriptions.csv"))){
@@ -52,7 +53,7 @@ public class SubscriptionCRUD extends BaseCRUD {
                 if(line.contains(subscriptionUuid.toString())) {
                     return ParserInterface.parseSubscription(line);
                 }
-            };
+            }
         } catch (Exception e) {}
         return null;
     }
@@ -66,7 +67,7 @@ public class SubscriptionCRUD extends BaseCRUD {
                 if(!line.isEmpty()){
                     subscriptions.add(ParserInterface.parseSubscription(line));
                 }
-            };
+            }
         } catch (Exception e) {}
 
         return subscriptions;
