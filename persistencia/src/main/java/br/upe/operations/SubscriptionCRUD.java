@@ -3,15 +3,11 @@ package br.upe.operations;
 import br.upe.pojos.HelperInterface;
 import br.upe.pojos.Subscription;
 import java.io.*;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-
-public class SubscriptionCRUD extends ClassCRUD{
+public class SubscriptionCRUD extends BaseCRUD {
     public SubscriptionCRUD(){ super(); }
 
     public void createSubscription(Subscription subscription){
@@ -50,31 +46,29 @@ public class SubscriptionCRUD extends ClassCRUD{
     }
 
     public static Subscription returnSubscription(UUID subscriptionUuid){
-        String rawSubscription = "";
-
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\subscriptions.csv"))){
             while(buffer.ready()){
                 String line = buffer.readLine();
                 if(line.contains(subscriptionUuid.toString())) {
-                    rawSubscription = line;
-                    break;
+                    return ParserInterface.parseSubscription(line);
+                }
+            };
+        } catch (Exception e) {}
+        return null;
+    }
+
+    public static Collection<Subscription> returnSubscription(){
+        Collection<Subscription> subscriptions = new ArrayList<>();
+
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\subscriptions.csv"))){
+            while(buffer.ready()){
+                String line = buffer.readLine();
+                if(!line.isEmpty()){
+                    subscriptions.add(ParserInterface.parseSubscription(line));
                 }
             };
         } catch (Exception e) {}
 
-        if(rawSubscription.isEmpty()) return null;
-
-        Subscription newSubscription = new Subscription();
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
-
-        Matcher matcher = pattern.matcher(rawSubscription);
-        if(matcher.matches()){
-            newSubscription.setUuid(UUID.fromString(matcher.group(1)));
-            newSubscription.setSessionUuid(UUID.fromString(matcher.group(3)));
-            newSubscription.setUserUuid(UUID.fromString(matcher.group(5)));
-            newSubscription.setDate(Date.from(Instant.parse(matcher.group(7))));
-        }
-
-        return newSubscription;
+        return subscriptions;
     }
 }

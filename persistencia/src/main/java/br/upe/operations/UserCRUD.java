@@ -3,13 +3,12 @@ package br.upe.operations;
 import java.io.*;
 
 import br.upe.pojos.*;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class UserCRUD extends ClassCRUD {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
+
+public class UserCRUD extends BaseCRUD {
     public UserCRUD(){ super(); }
 
     public void createUser(User user){
@@ -67,46 +66,34 @@ public class UserCRUD extends ClassCRUD {
     }
 
     public static User returnUser(UUID userUUID){
-        String rawUser = "";
-
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\users.csv"))){
             while(buffer.ready()){
                 String line = buffer.readLine();
                 if(line.contains(userUUID.toString())) {
-                    rawUser  = line;
-                    break;
+                    return ParserInterface.parseUser(line);
                 }
             }
         } catch (Exception e) {
             System.out.println("Erro ao ler arquivo em: UserCRUD");
         }
 
-        if(rawUser.isEmpty()) return null;
+        return null;
+    }
 
-        Pattern pattern = Pattern.compile("(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)(.*)(;)");
-        Matcher matcher = pattern.matcher(rawUser);
-        User newUser;
+    public Collection<User> returnUser(){
+        Collection<User> users = new ArrayList<>();
 
-        if(matcher.matches() && matcher.group(9).equals("true")){
-            newUser = new AdminUser();
-        } else {
-            newUser = new CommomUser();
-        }
-
-        if(matcher.matches()){
-            newUser.setUuid(UUID.fromString(matcher.group(1)));
-            newUser.setEmail(matcher.group(3));
-            newUser.setPassword(matcher.group(5));
-            newUser.setName(matcher.group(7));
-            for (String subscription : matcher.group(11).split(",")){
-                if(!subscription.isEmpty()) newUser.addSubscription(SubscriptionCRUD.returnSubscription(UUID.fromString(subscription)));
-            }
-            if(newUser instanceof AdminUser userHandler){
-                for (String event : matcher.group(13).split(",")){
-                    if(!event.isEmpty())userHandler.addEvent(EventCRUD.returnEvent(UUID.fromString(event)));
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\users.csv"))){
+            while(buffer.ready()){
+                String line = buffer.readLine();
+                if(!line.isEmpty()){
+                    users.add(ParserInterface.parseUser(line));
                 }
             }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler arquivo em: UserCRUD");
         }
-        return newUser;
+
+        return users;
     }
 }

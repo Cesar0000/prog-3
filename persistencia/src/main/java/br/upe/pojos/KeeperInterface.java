@@ -16,4 +16,7 @@ public interface KeeperInterface {
     static Subscription createSubscription(){
         return new Subscription();
     }
+    static Submission createSubmission() {
+        return new Submission();
+    }
 }

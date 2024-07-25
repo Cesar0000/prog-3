@@ -1,17 +1,17 @@
 package br.upe.operations;
 import  br.upe.pojos.*;
-import org.w3c.dom.events.Event;
 
 import java.io.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EventCRUD extends ClassCRUD {
+public class EventCRUD extends BaseCRUD {
     public EventCRUD(){ super(); }
 
     public void createEvent(GreatEvent event){
@@ -50,61 +50,39 @@ public class EventCRUD extends ClassCRUD {
         } catch (Exception e) {}
     }
 
-    public void updateEvent(UUID eventUuid, GreatEvent source) {  // Mundando de Event para GreatEvent
+    public void updateEvent(UUID eventUuid, GreatEvent source) {
+
         GreatEvent event = returnEvent(eventUuid);
         deleteEvent(eventUuid);
         HelperInterface.checkout(source, event);
         createEvent(event);
     }
 
-    public static GreatEvent returnEvent(UUID eventUuid) {
-        String rawEvent = "";
-
-        try (BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))) {
-            while (buffer.ready()) {
+    public static GreatEvent returnEvent(UUID eventUuid){
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
+            while(buffer.ready()){
                 String line = buffer.readLine();
-                if (line.contains(eventUuid.toString())) {
-                    rawEvent = line;
-                    break;
+                if(line.contains(eventUuid.toString())) {
+                    return ParserInterface.parseEvent(line);
+                }
+
+            }
+        } catch (Exception e) {}
+
+        return null;
+    }
+    public static Collection<GreatEvent> returnEvent(){
+        Collection<GreatEvent> events = new ArrayList<>();
+        try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
+            while(buffer.ready()){
+                String line = buffer.readLine();
+                if(line.isEmpty()) {
+                    events.add(ParserInterface.parseEvent(line));
+
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {}
 
-        if (rawEvent.isEmpty()) return null;
-
-        GreatEvent newEvent = new GreatEvent();
-
-        Pattern pattern = Pattern.compile("([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);([^;]*);");
-        Matcher matcher = pattern.matcher(rawEvent);
-
-        if (matcher.matches()) {
-            newEvent.setUuid(UUID.fromString(matcher.group(1)));
-            newEvent.setDescritor(matcher.group(2));
-            newEvent.setDirector(matcher.group(3));
-            newEvent.setStartDate(Date.from(Instant.parse(matcher.group(4))));
-            newEvent.setEndDate(Date.from(Instant.parse(matcher.group(5))));
-
-            String sessions = matcher.group(6);
-            if (!sessions.isEmpty()) {
-                for (String uuid : sessions.split(",")) {
-                    if (!uuid.isEmpty()) {
-                        newEvent.addSession(SessionCRUD.returnSession(UUID.fromString(uuid)));
-                    }
-                }
-            }
-
-            String submissions = matcher.group(7);
-            if (!submissions.isEmpty()) {
-                for (String uuid : submissions.split(",")) {
-                    if (!uuid.isEmpty()) {
-                        newEvent.addSubmission(SubmissionCRUD.returnSubmission(UUID.fromString(uuid)));
-                    }
-                }
-            }
-        }
-
-        return newEvent;
+        return events;
     }
 }
