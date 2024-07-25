@@ -49,12 +49,15 @@ public class EventCRUD extends BaseCRUD {
             }
         } catch (Exception e) {}
     }
+
     public void updateEvent(UUID eventUuid, GreatEvent source) {
+
         GreatEvent event = returnEvent(eventUuid);
         deleteEvent(eventUuid);
         HelperInterface.checkout(source, event);
         createEvent(event);
     }
+
     public static GreatEvent returnEvent(UUID eventUuid){
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
             while(buffer.ready()){
@@ -62,6 +65,7 @@ public class EventCRUD extends BaseCRUD {
                 if(line.contains(eventUuid.toString())) {
                     return ParserInterface.parseEvent(line);
                 }
+
             }
         } catch (Exception e) {}
 
@@ -74,6 +78,7 @@ public class EventCRUD extends BaseCRUD {
                 String line = buffer.readLine();
                 if(line.isEmpty()) {
                     events.add(ParserInterface.parseEvent(line));
+
                 }
             }
         } catch (Exception e) {}
