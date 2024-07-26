@@ -1,10 +1,7 @@
 package br.upe.UserInterface;
 
 import br.upe.controllers.*;
-import br.upe.pojos.AdminUser;
-import br.upe.pojos.GreatEvent;
-import br.upe.pojos.Submission;
-import br.upe.pojos.Subscription;
+import br.upe.pojos.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +62,8 @@ public class MainMenu {
             switch (choice) {
                 case 1:
                     displayLoginMenu();
+                    displayHomeMenu();
+
                     break;
                 case 2:
                     do {
@@ -168,6 +167,7 @@ public class MainMenu {
         } else {
             displayUserMenu();
         }
+        authController.logout();
     }
 
     public void displayUserMenu(){
@@ -192,7 +192,7 @@ public class MainMenu {
                     viewSubscriptions();
                     break;
                 case 3:
-                    viewSubmissions();
+                   // viewSubmissions();
                     break;
                 case 4:
                     System.out.print("Enter your current password: ");
@@ -213,7 +213,7 @@ public class MainMenu {
         while(running){
             Scanner scanner = new Scanner(System.in);
             System.out.println("Admin Menu");
-            System.out.println("1. Manage Events");
+            System.out.println("1. Create Event");
             System.out.println("2. List Events");
             System.out.println("3. Update Password");
             System.out.println("4. Exit");
@@ -223,7 +223,7 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    displayEventMenu();
+                    createNewEvent();
                     break;
                 case 2:
                     viewEventsByUser();
@@ -244,22 +244,22 @@ public class MainMenu {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
-            System.out.println("Event Menu");
-            System.out.println("1. Create New Event");
+            System.out.println("Event Menu: " + stateController.getCurrentEvent().getDescritor());
+            System.out.println("1. Manage Submissions");
             System.out.println("2. Update Event Descritor");
             System.out.println("3. Update Event Director");
             System.out.println("4. Update Event Start Date");
             System.out.println("5. Update Event End Date");
             System.out.println("6. Manage Session");
-            System.out.println("7. Manage Submissions");
-            System.out.println("8. Exit");
+
+            System.out.println("7. Exit");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    createNewEvent();
+                    manageSubmissions();
                     break;
                 case 2:
                     updateEventDescritor();
@@ -277,12 +277,106 @@ public class MainMenu {
                     manageSession();
                     break;
                 case 7:
-                    manageSubmissions();
-                    break;
+                   return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    private void manageSession(){
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Menu Session from: " + stateController.getCurrentEvent().getDescritor());
+            System.out.println("1. Create Session");
+            System.out.println("2. List Sessions");
+            System.out.println("3. Exit");
+
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    createNewSession();
+                    displaySessionMenu();
+                    break;
+                case 2:
+                    viewAllSessions();
+                    displaySessionMenu();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
+    }
+
+    public void viewAllSessions(){
+        Scanner scanner = new Scanner(System.in);
+        int counter = 1;
+        for(Session session : stateController.getCurrentEvent().getSessions()){
+            if (session != null) {
+                System.out.println("index [ " + counter + " ]");
+                System.out.println("Session: " + session.getDescritor());
+                if(session.getStartDate() != null) System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(session.getStartDate()));
+                if(session.getEndDate() != null)System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(session.getEndDate()));
+                System.out.println();
+                counter++;
+            }
+        }
+
+        System.out.println("Select session index to manage or type 0 to exit");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if(choice != 0 && choice <= counter){
+            int innerCount = 1;
+            System.out.println("outfor");
+            for(Session session : stateController.getCurrentEvent().getSessions()){
+                if(innerCount == choice){
+                    System.out.println("ifinner");
+                    sessionController.closeCurrentSession();
+                    sessionController.changeCurrentSession(session.getUuid());
+                    return;
+                } else{
+                    innerCount++;
+                }
+            }
+        }
+
+    }
+
+    private void manageSubmissions(){
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Submissions Menu: ");
+            System.out.println("1. List Submissions");
+            System.out.println("2. Remove Submission");
+            System.out.println("3. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    //listSubmissions();
+                    break;
+                case 2:
+                    //removeSubmission();
+                    break;
+                case 3:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
     }
 
     private void createNewEvent() {
@@ -295,9 +389,11 @@ public class MainMenu {
         scanner.nextLine();
         if (eventController.createNewEvent(descritor, director)) {
             System.out.println("Event created successfully.");
+            displayEventMenu();
         } else {
             System.out.println("Failed to create event. Ensure you are logged in as an admin.");
         }
+
     }
 
     private void updateEventDescritor() {
@@ -374,8 +470,8 @@ public class MainMenu {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
-            System.out.println("Session Menu");
-            System.out.println("1. Create New Session");
+            System.out.println("Session Menu: " + stateController.getCurrentSession().getDescritor());
+            System.out.println("1. List Subscriptions");
             System.out.println("2. Update Session Descritor");
             System.out.println("3. Update Session Start Date");
             System.out.println("4. Update Session End Date");
@@ -386,7 +482,7 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    createNewSession();
+                    //listSessionSubscription();
                     break;
                 case 2:
                     updateSessionDescritor();
@@ -408,7 +504,7 @@ public class MainMenu {
 
     private void createNewSession() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter session descritor:");
+        System.out.println("Título da sessão:");
         String descritor = scanner.nextLine();
         if (sessionController.createNewSession(descritor)) {
             System.out.println("Session created successfully.");
@@ -556,13 +652,36 @@ public class MainMenu {
     }
 
     private void viewEventsByUser() {
+        Scanner scanner = new Scanner(System.in);
+        int counter = 1;
         for(GreatEvent event : eventController.getAllEventsByUser()){
             if (event != null) {
+                System.out.println("index [ " + counter + " ]");
                 System.out.println("Event: " + event.getDescritor());
                 System.out.println("Director: " + event.getDirector());
-                System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
-                System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
+                if(event.getStartDate() != null) System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
+                if(event.getEndDate() != null)System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
                 System.out.println();
+                counter++;
+            }
+        }
+
+        System.out.println("Select event index to manage or type 0 to exit");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if(choice != 0 && choice <= counter){
+            int innerCount = 1;
+            for(GreatEvent event : eventController.getAllEventsByUser()){
+                if(innerCount == choice){
+                    eventController.closeCurrentEvent();
+                    eventController.changeCurrentEvent(event.getUuid());
+                    displayEventMenu();
+                    return;
+                } else{
+                    innerCount++;
+                }
             }
         }
     }
