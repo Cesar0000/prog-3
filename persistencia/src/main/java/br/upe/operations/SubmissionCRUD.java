@@ -18,7 +18,7 @@ public class SubmissionCRUD extends BaseCRUD {
             buffer.write(ParserInterface.validadeString(submission.getDescritor()) + ";");
             buffer.write(ParserInterface.validadeString(submission.getEventUuid()) + ";");
             buffer.write(ParserInterface.validadeString(submission.getUserUuid()) + ";");
-            buffer.write(ParserInterface.validadeString(submission.getDate().toInstant()) + ";");
+            buffer.write((submission.getDate() != null ? ParserInterface.validadeString(submission.getDate().toInstant()): "") + ";");
 
             buffer.newLine();
         } catch(Exception e) {
