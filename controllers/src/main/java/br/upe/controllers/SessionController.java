@@ -25,7 +25,13 @@ public class SessionController {
             session.setSubscriptions(new ArrayList<>());
 
             stateController.setCurrentSession(session);
+            stateController.getCurrentEvent().addSession(session);
+
+            GreatEvent eventHandler = KeeperInterface.createGreatEvent();
+            eventHandler.setSessions(stateController.getCurrentEvent().getSessions());
+
             crudController.sessionCRUD.createSession(session);
+            crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), eventHandler);
 
             return true;
         }
@@ -76,10 +82,10 @@ public class SessionController {
         crudController.sessionCRUD.updateSession(stateController.getCurrentSession().getUuid(), sessionHandler);
         crudController.userCRUD.updateUser(stateController.getCurrentUser().getUuid(), userHandler);
     }
-    void changeCurrentSession(UUID sessionUuid){
+    public void changeCurrentSession(UUID sessionUuid){
         stateController.setCurrentSession(crudController.sessionCRUD.returnSession(sessionUuid));
     }
-    void closeCurrentSession(){
+    public void closeCurrentSession(){
         stateController.setCurrentSession(null);
     }
 }
