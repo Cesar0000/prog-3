@@ -37,10 +37,11 @@ public class SessionController {
         }
         return false;
     }
-    public void updateSessionDescritor(String descritor){
+    public boolean updateSessionDescritor(String descritor){
         Session source = KeeperInterface.createSession();
         source.setDescritor(descritor);
         crudController.sessionCRUD.updateSession(stateController.getCurrentSession().getUuid(), source);
+        return false;
     }
     public boolean updateSessionStartDate(Date startDate){
         Session source = KeeperInterface.createSession();

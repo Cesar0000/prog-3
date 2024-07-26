@@ -14,7 +14,7 @@ public class EventController {
     private final StateController stateController;
     private final CRUDController crudController;
 
-    public boolean createNewEvent(String descritor, String director){
+    public boolean createNewEvent(String descritor, String director, Date startDate, Date endDate){
         if(stateController.getCurrentUser() instanceof AdminUser user){
             GreatEvent event = KeeperInterface.createGreatEvent();
             event.setUuid(UUID.randomUUID());
@@ -22,6 +22,8 @@ public class EventController {
             event.setDirector(director);
             event.setSubmissions(new ArrayList<>());
             event.setSessions(new ArrayList<>());
+            event.setStartDate(startDate);
+            event.setEndDate(endDate);
 
             user.addEvent(event);
             AdminUser userHandler = KeeperInterface.createAdminUser();
@@ -36,25 +38,29 @@ public class EventController {
         return false;
     }
 
-    public void updateEventDescritor(String descritor){
+    public boolean updateEventDescritor(String descritor){
         GreatEvent source = KeeperInterface.createGreatEvent();
         source.setDescritor(descritor);
         crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), source);
+        return false;
     }
-    public void updateEventDirector(String director){
+    public boolean updateEventDirector(String director){
         GreatEvent source = KeeperInterface.createGreatEvent();
         source.setDirector(director);
         crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), source);
+        return false;
     }
-    public void updateEventStartDate(Date startDate){
+    public boolean updateEventStartDate(Date startDate){
         GreatEvent source = KeeperInterface.createGreatEvent();
         source.setStartDate(startDate);
         crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), source);
+        return false;
     }
-    public void updateEventEndDate(Date endDate){
+    public boolean updateEventEndDate(Date endDate){
         GreatEvent source = KeeperInterface.createGreatEvent();
         source.setEndDate(endDate);
         crudController.eventCRUD.updateEvent(stateController.getCurrentEvent().getUuid(), source);
+        return false;
     }
     public void addEventSubmission(String descritor){
         Submission submission = KeeperInterface.createSubmission();
