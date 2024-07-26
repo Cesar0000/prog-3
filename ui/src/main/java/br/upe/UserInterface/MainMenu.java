@@ -360,6 +360,35 @@ public class MainMenu {
         }
     }
 
+    private void displayEventMenuForCommomUser(){
+        boolean running = true;
+
+        while (running) {
+            System.out.println("Event Menu: " + stateController.getCurrentEvent().getDescritor());
+            System.out.println("1. List Sessions");
+            System.out.println("2. Create Submission");
+            System.out.println("3. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline left-over
+
+            switch (choice) {
+                case 1:
+                    viewAllSessions();
+                    break;
+                case 2:
+                    manageSubmissions();
+                    break;
+                case 3:
+                    running = false;
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+
+    }
     private void manageSession() {
         boolean running = true;
         while (running) {
@@ -572,7 +601,7 @@ public class MainMenu {
                 System.out.println("Event: " + event.getDescritor());
                 System.out.println("Director: " + event.getDirector());
                 if(event.getStartDate() != null) System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
-                if(event.getEndDate() != null)System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
+                if(event.getEndDate() != null) System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
                 System.out.println();
                 counter++;
             }
@@ -601,14 +630,34 @@ public class MainMenu {
     }
 
     private void viewAllEvents() {
+        int counter = 1;
         for(GreatEvent event : eventController.getAllEvents()){
             if (event != null) {
                 System.out.println("Event: " + event.getDescritor());
                 System.out.println("Director: " + event.getDirector());
-                System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
+                if(event.getStartDate() != null )System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
                 System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
                 System.out.println();
                 counter++;
+            }
+        }
+
+        System.out.println("Select event index to manage or type 0 to exit");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if(choice != 0 && choice <= counter){
+            int innerCount = 1;
+            for(GreatEvent event : eventController.getAllEventsByUser()){
+                if(innerCount == choice){
+                    eventController.closeCurrentEvent();
+                    eventController.changeCurrentEvent(event.getUuid());
+                    displayEventMenuForCommomUser();
+                    return;
+                } else{
+                    innerCount++;
+                }
             }
         }
     }

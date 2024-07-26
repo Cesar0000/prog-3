@@ -90,7 +90,15 @@ public class EventController {
     }
 
     public Collection<GreatEvent> getAllEventsByUser() {
-        if(stateController.getCurrentUser() instanceof AdminUser user) return user.getEvents();
-        return getAllEvents();
+        //if(stateController.getCurrentUser() instanceof AdminUser user) return user.getEvents();
+        Collection<GreatEvent> events = crudController.eventCRUD.returnEvent();
+        Collection<GreatEvent> filtered = new ArrayList<>();
+
+        for(GreatEvent event : events){
+            if(event != null) {
+                if(event.getUuid().toString().equals(stateController.getCurrentUser().getUuid().toString())) filtered.add(event);
+            }
+        }
+        return filtered;
     }
 }
