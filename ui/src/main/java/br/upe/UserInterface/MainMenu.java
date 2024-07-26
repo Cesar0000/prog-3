@@ -2,6 +2,8 @@ package br.upe.UserInterface;
 
 import br.upe.controllers.*;
 import br.upe.pojos.AdminUser;
+import br.upe.pojos.GreatEvent;
+import br.upe.pojos.Submission;
 import br.upe.pojos.Subscription;
 
 import java.text.ParseException;
@@ -171,36 +173,71 @@ public class MainMenu {
     public void displayUserMenu(){
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
+        while (running){
+            System.out.println("User Menu");
+            System.out.println("1. List Events");
+            System.out.println("2. List Subscriptions");
+            System.out.println("3. List Submissions");
+            System.out.println("4. Update Password");
+            System.out.println("5. Exit");
 
-        System.out.println("User Menu");
-        System.out.println("1. List Events");
-        System.out.println("2. List Subscriptions");
-        System.out.println("3. List Submissions");
-        System.out.println("4. Update Password");
-        System.out.println("5. Exit");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                //ListUserEvent();
-                break;
-            case 2:
-                running = false;
-                break;
-            default:
-                System.out.println("Opção inválida. Tente novamente.");
+            switch (choice) {
+                case 1:
+                    viewAllEvents();
+                    break;
+                case 2:
+                    viewSubscriptions();
+                    break;
+                case 3:
+                    viewSubmissions();
+                    break;
+                case 4:
+                    System.out.print("Enter your current password: ");
+                    String password = scanner.nextLine().trim();
+                    System.out.println();
+                case 5:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
         }
 
 
     }
     public void displayAdminMenu(){
-        System.out.println("Admin Menu");
-        System.out.println("1. Manage Events");
-        System.out.println("2. List Events");
-        System.out.println("3. Update Password");
-        System.out.println("4. Exit");
+        boolean running = true;
+        while(running){
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Admin Menu");
+            System.out.println("1. Manage Events");
+            System.out.println("2. List Events");
+            System.out.println("3. Update Password");
+            System.out.println("4. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    displayEventMenu();
+                    break;
+                case 2:
+                    viewEventsByUser();
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+
     }
 
     public void displayEventMenu() {
@@ -439,11 +476,11 @@ public class MainMenu {
             System.out.println("Subscription Menu");
             System.out.println("1. Create New Subscription");
             System.out.println("2. Delete Subscription");
-            System.out.println("3. View Subscription");
+            System.out.println("3. View Subscriptions");
             System.out.println("4. Exit");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -453,7 +490,7 @@ public class MainMenu {
                     deleteSubscription();
                     break;
                 case 3:
-                    viewSubscription();
+                    viewSubscriptions();
                     break;
                 case 4:
                     running = false;
@@ -494,18 +531,39 @@ public class MainMenu {
         System.out.println("Subscription deleted successfully.");
     }
 
-    private void viewSubscription() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter subscription UUID to view:");
-        UUID subscriptionUuid = UUID.fromString(scanner.nextLine());
-        Subscription subscription = crudController.subscriptionCRUD.returnSubscription(subscriptionUuid);
-        if (subscription != null) {
-            System.out.println("Subscription UUID: " + subscription.getUuid());
-            System.out.println("Session UUID: " + subscription.getSessionUuid());
-            System.out.println("User UUID: " + subscription.getUserUuid());
-            System.out.println("Date: " + new SimpleDateFormat("yyyy-MM-dd").format(subscription.getDate()));
-        } else {
-            System.out.println("Subscription not found.");
+    private void viewSubscriptions() {
+        for(Subscription subscription : stateController.getCurrentUser().getSubscriptions()){
+            if (subscription != null) {
+                System.out.println("Subscription UUID: " + subscription.getUuid());
+                System.out.println("Session UUID: " + subscription.getSessionUuid());
+                System.out.println("User UUID: " + subscription.getUserUuid());
+                System.out.println("Date: " + new SimpleDateFormat("yyyy-MM-dd").format(subscription.getDate()));
+                System.out.println();
+            }
+        }
+    }
+
+    private void viewAllEvents() {
+        for(GreatEvent event : eventController.getAllEvents()){
+            if (event != null) {
+                System.out.println("Event: " + event.getDescritor());
+                System.out.println("Director: " + event.getDirector());
+                System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
+                System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
+                System.out.println();
+            }
+        }
+    }
+
+    private void viewEventsByUser() {
+        for(GreatEvent event : eventController.getAllEventsByUser()){
+            if (event != null) {
+                System.out.println("Event: " + event.getDescritor());
+                System.out.println("Director: " + event.getDirector());
+                System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
+                System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
+                System.out.println();
+            }
         }
     }
 }
