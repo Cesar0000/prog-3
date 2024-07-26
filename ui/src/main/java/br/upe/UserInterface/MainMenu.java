@@ -213,8 +213,8 @@ public class MainMenu {
             System.out.println("3. Update Event Director");
             System.out.println("4. Update Event Start Date");
             System.out.println("5. Update Event End Date");
-            System.out.println("6. Add Submission to Event");
-            System.out.println("7. Manage Session");
+            System.out.println("6. Manage Session");
+            System.out.println("7. Manage Submissions");
             System.out.println("8. Exit");
 
             int choice = scanner.nextInt();
@@ -237,10 +237,10 @@ public class MainMenu {
                     updateEventEndDate();
                     break;
                 case 6:
-                    addEventSubmission();
+                    manageSession();
                     break;
                 case 7:
-                    running = false;
+                    manageSubmissions();
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
