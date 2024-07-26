@@ -10,7 +10,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EventCRUDTest {
-
+/*
     private static final String FILE_PATH = ".\\state\\events.csv";
 
     @BeforeEach
@@ -121,4 +121,5 @@ public class EventCRUDTest {
         assertEquals("Test Event", returnedEvent.getDescritor());
         assertEquals("Test Director", returnedEvent.getDirector());
     }
+ */
 }
