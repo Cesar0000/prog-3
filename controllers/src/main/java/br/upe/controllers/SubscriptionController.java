@@ -32,6 +32,7 @@ public class SubscriptionController {
 
         Session sessionHandler = KeeperInterface.createSession();
         User userHandler;
+        
         if(newUser instanceof AdminUser){
             userHandler = KeeperInterface.createAdminUser();
         } else {

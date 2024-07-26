@@ -2,6 +2,7 @@ package br.upe.controllers;
 
 import br.upe.pojos.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -76,5 +77,14 @@ public class EventController {
     }
     public void closeCurrentEvent(){
         stateController.setCurrentEvent(null);
+    }
+
+    public Collection<GreatEvent> getAllEvents() {
+        return crudController.eventCRUD.returnEvent();
+    }
+
+    public Collection<GreatEvent> getAllEventsByUser() {
+        if(stateController.getCurrentUser() instanceof AdminUser user) return user.getEvents();
+        return getAllEvents();
     }
 }

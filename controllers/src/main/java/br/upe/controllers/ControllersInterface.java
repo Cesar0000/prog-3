@@ -19,4 +19,10 @@ public interface ControllersInterface {
     static EventController newEventController(StateController stateController, CRUDController crudController) {
         return new EventController(stateController, crudController);
     }
+    static SubmissionController newSubmissionController(StateController stateController, CRUDController crudController) {
+        return new SubmissionController(stateController, crudController);
+    }
+    static SubscriptionController newSubscriptionController(StateController stateController, CRUDController crudController) {
+        return new SubscriptionController(stateController, crudController);
+    }
 }

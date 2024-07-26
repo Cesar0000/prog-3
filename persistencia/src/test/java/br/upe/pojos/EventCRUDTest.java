@@ -12,8 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EventCRUDTest {
+
     private EventCRUD eventCRUD;
     private final String filePath = ".\\state\\events.csv";
+
+    private static final String FILE_PATH = ".\\state\\events.csv";
 
     @BeforeEach
     public void setUp() {
@@ -122,4 +125,6 @@ public class EventCRUDTest {
         assertNotNull(returnedEvent);
         assertEquals(uuidToReturn, returnedEvent.getUuid());
     }
+ */
+
 }

@@ -72,7 +72,8 @@ public class SessionCRUD extends BaseCRUD {
             while(buffer.ready()){
                 String line = buffer.readLine();
                 if(!line.isEmpty()) {
-                    sessions.add(ParserInterface.parseSession(line));
+                    Session session = ParserInterface.parseSession(line);
+                    if (session != null) sessions.add(session);
                 }
             }
         } catch (Exception e) {}
