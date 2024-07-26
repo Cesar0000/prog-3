@@ -10,7 +10,7 @@ import java.util.UUID;
 public class SubscriptionCRUD extends BaseCRUD {
     public SubscriptionCRUD(){ super(); }
 
-    public void createSubscription(Subscription subscription){
+    public boolean createSubscription(Subscription subscription){
         try(BufferedWriter buffer = new BufferedWriter(new FileWriter(".\\state\\subscriptions.csv", true))){
             buffer.write(ParserInterface.validadeString(subscription.getUuid()) + ";");
             buffer.write(ParserInterface.validadeString(subscription.getSessionUuid()) + ";");
@@ -19,6 +19,7 @@ public class SubscriptionCRUD extends BaseCRUD {
 
             buffer.newLine();
         } catch (Exception e) {}
+        return false;
     }
 
     public void deleteSubscription(UUID subscriptionUuid){

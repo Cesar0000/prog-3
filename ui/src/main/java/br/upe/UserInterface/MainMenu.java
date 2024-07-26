@@ -1,12 +1,12 @@
 package br.upe.UserInterface;
 
 import br.upe.controllers.*;
+import br.upe.operations.HasherInterface;
 import br.upe.pojos.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class MainMenu {
     private final StateController stateController = ControllersInterface.newStateController();
@@ -179,7 +179,7 @@ public class MainMenu {
         boolean running = true;
         while (running) {
             System.out.println("User Menu");
-            System.out.println("1. List Events");
+            System.out.println("1. Subscribe to Events");
             System.out.println("2. List Subscriptions");
             System.out.println("3. List Submissions");
             System.out.println("4. Update Password");
@@ -190,7 +190,7 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    viewAllEvents();
+                    createSubscription();
                     break;
                 case 2:
                     viewSubscriptions();
@@ -202,7 +202,14 @@ public class MainMenu {
                     System.out.print("Enter your current password: ");
                     String password = scanner.nextLine().trim();
                     System.out.println();
-                    //updatePassword(password);
+                    if(HasherInterface.hash(password).equals(stateController.getCurrentUser().getPassword())){
+                        String newPassword = scanner.nextLine().trim();
+                        userController.updateUserPassword(newPassword);
+                        scanner.nextLine();
+                        System.out.println("Senha alterada com sucesso!.");
+                    } else {
+                        System.out.println("Senha atual incorreta.");
+                    }
                     break;
                 case 5:
                     running = false;
@@ -212,6 +219,61 @@ public class MainMenu {
             }
         }
     }
+
+
+    public void createSubscription() {
+        // Verificar se o usuário está logado
+        if (stateController.getCurrentUser() == null) {
+            System.out.println("Por favor, faça login primeiro.");
+            return;
+        }
+
+        System.out.println("Lista de Eventos Disponíveis:");
+        viewAllEvents();
+        // Listar todos os eventos disponíveis para inscrição
+        Collection<GreatEvent> allEvents = eventController.getAllEvents();
+        GreatEvent selectedEvent = eventController.getAllEvents().stream().toList().get(getValidIndexFromUser(allEvents.size()));
+        stateController.setCurrentEvent(selectedEvent);
+
+        // Criar a inscrição
+        UUID userUuid = stateController.getCurrentUser().getUuid();
+        UUID eventUuid = stateController.getCurrentEvent().getUuid();
+        Date subscriptionDate = new Date();
+
+        Subscription subscription = KeeperInterface.createSubscription();
+        subscription.setUuid(userUuid);
+        subscription.setUuid(eventUuid);
+        subscription.setDate(subscriptionDate);
+
+        // Tentar criar a inscrição
+        if (crudController.subscriptionCRUD.createSubscription(subscription)) {
+            System.out.println("Inscrição realizada com sucesso!");
+        } else {
+            System.out.println("Falha ao realizar a inscrição. Tente novamente.");
+        }
+    }
+
+    private int getValidIndexFromUser(int size) {
+        Scanner scanner = new Scanner(System.in);
+        int index = -1;
+
+        while (index < 0 || index > size) {
+            System.out.print("Selecione o índice do evento para se inscrever ou 0 para sair: ");
+            index = scanner.nextInt();
+            scanner.nextLine(); // Consumir a nova linha
+
+            if (index == 0) {
+                return -1; // Sair se o usuário digitar 0
+            }
+
+            if (index < 0 || index > size) {
+                System.out.println("Índice inválido. Tente novamente.");
+            }
+        }
+
+        return index - 1; // Ajuste para índice baseado em 0
+    }
+
 
     public void displayAdminMenu() {
         boolean running = true;
@@ -233,7 +295,16 @@ public class MainMenu {
                     viewEventsByUser();
                     break;
                 case 3:
-                    // updatePassword();
+                    System.out.print("Enter your current password: ");
+                    String password = scanner.nextLine().trim();
+                    System.out.println();
+                    if(HasherInterface.hash(password).equals(stateController.getCurrentUser().getPassword())){
+                        String newPassword = scanner.nextLine().trim();
+                        userController.updateUserPassword(newPassword);
+                        System.out.println("Senha alterada com sucesso!.");
+                    } else {
+                        System.out.println("Senha atual incorreta.");
+                    }
                     break;
                 case 4:
                     running = false;
@@ -516,10 +587,12 @@ public class MainMenu {
             int innerCount = 1;
             for(GreatEvent event : eventController.getAllEventsByUser()){
                 if(innerCount == choice){
-                    eventController.closeCurrentEvent();
-                    eventController.changeCurrentEvent(event.getUuid());
-                    displayEventMenu();
-                    return;
+                    if(event.getUuid() != null) {
+                        eventController.closeCurrentEvent();
+                        eventController.changeCurrentEvent(event.getUuid());
+                        displayEventMenu();
+                        return;
+                    }
                 } else{
                     innerCount++;
                 }
@@ -535,6 +608,7 @@ public class MainMenu {
                 System.out.println("Start Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getStartDate()));
                 System.out.println("End Date: " + new SimpleDateFormat("yyyy-MM-dd").format(event.getEndDate()));
                 System.out.println();
+                counter++;
             }
         }
     }
