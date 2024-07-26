@@ -76,7 +76,7 @@ public class EventCRUD extends BaseCRUD {
         try(BufferedReader buffer = new BufferedReader(new FileReader(".\\state\\events.csv"))){
             while(buffer.ready()){
                 String line = buffer.readLine();
-                if(line.isEmpty()) {
+                if(!line.isEmpty()) {
                     events.add(ParserInterface.parseEvent(line));
 
                 }
