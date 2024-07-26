@@ -1,0 +1,511 @@
+package br.upe.UserInterface;
+
+import br.upe.controllers.*;
+import br.upe.pojos.AdminUser;
+import br.upe.pojos.Subscription;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+import java.util.UUID;
+
+public class MainMenu {
+    private final StateController stateController = ControllersInterface.newStateController();
+    private final CRUDController crudController = ControllersInterface.newCRUDController();
+    private final AuthController authController = ControllersInterface.newAuthController(stateController, crudController);
+    private final UserController userController = ControllersInterface.newUserController(stateController, crudController);
+    private final EventController eventController = ControllersInterface.newEventController(stateController, crudController);
+    private final SessionController sessionController = ControllersInterface.newSessionController(stateController, crudController);
+    private final SubscriptionController subscriptionController = ControllersInterface.newSubscriptionController(stateController, crudController);
+    private final SubmissionController submissionController = ControllersInterface.newSubmissionController(stateController, crudController);
+
+    public void displayStartMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        while (running) {
+            System.out.println("App Menu:");
+            System.out.println("1. Menu de Login");
+            System.out.println("2. Sair");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    displayAuthMenu();
+                    break;
+                case 2:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+
+        }
+
+        System.out.println("Aplicação encerrada.");
+    }
+
+    public void displayAuthMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Event Menu");
+            System.out.println("1. Login");
+            System.out.println("2. Create new User");
+            System.out.println("3. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    displayLoginMenu();
+                    break;
+                case 2:
+                    do {
+                        choice = 4;
+                        System.out.println("Create User Menu");
+                        System.out.println("1. Create new Admin");
+                        System.out.println("2. Create new User");
+                        System.out.println("3. Exit");
+                        choice = scanner.nextInt();
+                        switch (choice) {
+                            case 1:
+                                createNewAdmin();
+                                break;
+                            case 2:
+                                createNewUser();
+                                break;
+                            case 3:
+                                running = false;
+                                break;
+                            default:
+                                System.out.println("Invalid choice. Please try again.");
+                        }
+                    } while (choice >= 4);
+                        break;
+                        case 3:
+                            running = false;
+                            break;
+                        default:
+                            System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    public void createNewUser(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter your e-mail: ");
+        String email = scanner.nextLine().trim();
+        System.out.println();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine().trim();
+        System.out.println();
+
+        if(authController.createNewUser(email, password)){
+            authController.login(email, password);
+
+            System.out.print("Enter your full name without abbreviations: ");
+            String name = scanner.nextLine().trim();
+            System.out.println();
+            userController.updateUserName(name);
+            authController.logout();
+            System.out.println("User created!");
+        }
+
+    }
+    public void createNewAdmin(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your e-mail: ");
+        String email = scanner.nextLine().trim();
+        System.out.println();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine().trim();
+        System.out.println();
+
+        if(authController.createNewAdmin(email, password)){
+            authController.login(email, password);
+
+            System.out.print("Enter your full name without abbreviations: ");
+            String name = scanner.nextLine().trim();
+            System.out.println();
+            userController.updateUserName(name);
+            authController.logout();
+            System.out.println("User created!");
+        }
+
+    }
+
+    public void displayLoginMenu(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter your e-mail: ");
+        String email = scanner.nextLine().trim();
+        scanner.nextLine();
+        System.out.println();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine().trim();
+        scanner.nextLine();
+        System.out.println();
+
+        if(authController.login(email, password)) {
+            System.out.println("Logged successfully!");
+            return;
+        } else {
+            displayLoginMenu();
+        }
+    }
+
+    public void displayHomeMenu(){
+        if(stateController.getCurrentUser() instanceof AdminUser){
+            displayAdminMenu();
+        } else {
+            displayUserMenu();
+        }
+    }
+
+    public void displayUserMenu(){
+        boolean running = true;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("User Menu");
+        System.out.println("1. List Events");
+        System.out.println("2. List Subscriptions");
+        System.out.println("3. List Submissions");
+        System.out.println("4. Update Password");
+        System.out.println("5. Exit");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                //ListUserEvent();
+                break;
+            case 2:
+                running = false;
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+        }
+
+
+    }
+    public void displayAdminMenu(){
+        System.out.println("Admin Menu");
+        System.out.println("1. Manage Events");
+        System.out.println("2. List Events");
+        System.out.println("3. Update Password");
+        System.out.println("4. Exit");
+    }
+
+    public void displayEventMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Event Menu");
+            System.out.println("1. Create New Event");
+            System.out.println("2. Update Event Descritor");
+            System.out.println("3. Update Event Director");
+            System.out.println("4. Update Event Start Date");
+            System.out.println("5. Update Event End Date");
+            System.out.println("6. Add Submission to Event");
+            System.out.println("7. Manage Session");
+            System.out.println("8. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    createNewEvent();
+                    break;
+                case 2:
+                    updateEventDescritor();
+                    break;
+                case 3:
+                    updateEventDirector();
+                    break;
+                case 4:
+                    updateEventStartDate();
+                    break;
+                case 5:
+                    updateEventEndDate();
+                    break;
+                case 6:
+                    addEventSubmission();
+                    break;
+                case 7:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private void createNewEvent() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter event descritor:");
+        String descritor = scanner.nextLine();
+        scanner.nextLine();
+        System.out.println("Enter event director:");
+        String director = scanner.nextLine();
+        scanner.nextLine();
+        if (eventController.createNewEvent(descritor, director)) {
+            System.out.println("Event created successfully.");
+        } else {
+            System.out.println("Failed to create event. Ensure you are logged in as an admin.");
+        }
+    }
+
+    private void updateEventDescritor() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new event descritor:");
+        String descritor = scanner.nextLine();
+        eventController.updateEventDescritor(descritor);
+        System.out.println("Event descritor updated.");
+    }
+
+    private void updateEventDirector() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new event director:");
+        String director = scanner.nextLine();
+        eventController.updateEventDirector(director);
+        System.out.println("Event director updated.");
+    }
+
+    private void updateEventStartDate() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new start date (yyyy-MM-dd):");
+        String startDateStr = scanner.nextLine();
+        try {
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+            eventController.updateEventStartDate(startDate);
+            System.out.println("Event start date updated.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
+
+    private void updateEventEndDate() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter new end date (yyyy-MM-dd):");
+        String endDateStr = scanner.nextLine();
+        try {
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+            eventController.updateEventEndDate(endDate);
+            System.out.println("Event end date updated.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
+
+    private void addEventSubmission() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentEvent() == null) {
+            System.out.println("No event selected.");
+            return;
+        }
+        System.out.println("Enter submission descritor:");
+        String descritor = scanner.nextLine();
+        eventController.addEventSubmission(descritor);
+        System.out.println("Submission added to event.");
+    }
+
+    public void displaySessionMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Session Menu");
+            System.out.println("1. Create New Session");
+            System.out.println("2. Update Session Descritor");
+            System.out.println("3. Update Session Start Date");
+            System.out.println("4. Update Session End Date");
+            System.out.println("5. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    createNewSession();
+                    break;
+                case 2:
+                    updateSessionDescritor();
+                    break;
+                case 3:
+                    updateSessionStartDate();
+                    break;
+                case 4:
+                    updateSessionEndDate();
+                    break;
+                case 5:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private void createNewSession() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter session descritor:");
+        String descritor = scanner.nextLine();
+        if (sessionController.createNewSession(descritor)) {
+            System.out.println("Session created successfully.");
+        } else {
+            System.out.println("Failed to create session. Ensure you are logged in as an admin.");
+        }
+    }
+
+    private void updateSessionDescritor() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
+        }
+        System.out.println("Enter new session descritor:");
+        String descritor = scanner.nextLine();
+        sessionController.updateSessionDescritor(descritor);
+        System.out.println("Session descritor updated.");
+    }
+
+    private void updateSessionStartDate() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
+        }
+        System.out.println("Enter new start date (yyyy-MM-dd):");
+        String startDateStr = scanner.nextLine();
+        try {
+            Date startDate = new Date(startDateStr);  // Simplified date parsing
+            if (sessionController.updateSessionStartDate(startDate)) {
+                System.out.println("Session start date updated.");
+            } else {
+                System.out.println("Invalid start date. It must be after the event start date.");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format.");
+        }
+    }
+
+    private void updateSessionEndDate() {
+        Scanner scanner = new Scanner(System.in);
+        if (stateController.getCurrentSession() == null) {
+            System.out.println("No session selected.");
+            return;
+        }
+        System.out.println("Enter new end date (yyyy-MM-dd):");
+        String endDateStr = scanner.nextLine();
+        try {
+            Date endDate = new Date(endDateStr);  // Simplified date parsing
+            if (sessionController.updateSessionEndDate(endDate)) {
+                System.out.println("Session end date updated.");
+            } else {
+                System.out.println("Invalid end date. It must be before the event end date.");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format.");
+        }
+    }
+
+    public void displaySubscriptionMenu() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+        while (running) {
+            System.out.println("Subscription Menu");
+            System.out.println("1. Create New Subscription");
+            System.out.println("2. Delete Subscription");
+            System.out.println("3. View Subscription");
+            System.out.println("4. Exit");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    createNewSubscription();
+                    break;
+                case 2:
+                    deleteSubscription();
+                    break;
+                case 3:
+                    viewSubscription();
+                    break;
+                case 4:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private void createNewSubscription() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter session UUID (existing session):");
+        UUID sessionUuid = UUID.fromString(scanner.nextLine());
+        System.out.println("Enter user UUID (existing user):");
+        UUID userUuid = UUID.fromString(scanner.nextLine());
+        System.out.println("Enter subscription date (yyyy-MM-dd):");
+        String dateStr = scanner.nextLine();
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+            Subscription subscription = new Subscription();
+            subscription.setUuid(UUID.randomUUID());
+            subscription.setSessionUuid(sessionUuid);
+            subscription.setUserUuid(userUuid);
+            subscription.setDate(date);
+            crudController.subscriptionCRUD.createSubscription(subscription);
+            System.out.println("Subscription created successfully.");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+        }
+    }
+
+    private void deleteSubscription() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter subscription UUID to delete:");
+        UUID subscriptionUuid = UUID.fromString(scanner.nextLine());
+        subscriptionController.removeSubscription(subscriptionUuid);
+        System.out.println("Subscription deleted successfully.");
+    }
+
+    private void viewSubscription() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter subscription UUID to view:");
+        UUID subscriptionUuid = UUID.fromString(scanner.nextLine());
+        Subscription subscription = crudController.subscriptionCRUD.returnSubscription(subscriptionUuid);
+        if (subscription != null) {
+            System.out.println("Subscription UUID: " + subscription.getUuid());
+            System.out.println("Session UUID: " + subscription.getSessionUuid());
+            System.out.println("User UUID: " + subscription.getUserUuid());
+            System.out.println("Date: " + new SimpleDateFormat("yyyy-MM-dd").format(subscription.getDate()));
+        } else {
+            System.out.println("Subscription not found.");
+        }
+    }
+}
