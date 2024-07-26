@@ -202,7 +202,7 @@ public class MainMenu {
                     System.out.print("Enter your current password: ");
                     String password = scanner.nextLine().trim();
                     System.out.println();
-                    // updatePassword(password);
+                    //updatePassword(password);
                     break;
                 case 5:
                     running = false;
@@ -333,7 +333,6 @@ public class MainMenu {
     }
 
     private void createNewSession() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Título da sessão:");
         String descritor = scanner.nextLine();
         if (sessionController.createNewSession(descritor)) {
@@ -341,7 +340,6 @@ public class MainMenu {
         } else {
             System.out.println("Failed to create session. Ensure you are logged in as an admin.");
         }
-        scanner.close();
     }
 
     private void displaySessionMenu() {
@@ -527,7 +525,6 @@ public class MainMenu {
                 }
             }
         }
-        scanner.close();
     }
 
     private void viewAllEvents() {
@@ -547,7 +544,7 @@ public class MainMenu {
         for (Subscription subscription : stateController.getCurrentUser().getSubscriptions()) {
             if (subscription != null) {
                 System.out.println("index [ " + counter + " ]");
-                System.out.println("Event: " + crudController.eventCRUD.returnEvent(crudController.sessionCRUD.returnSession(subscription.getSessionUuid()).getEventUuid()));
+                System.out.println("Event: " + crudController.sessionCRUD.returnSession(subscription.getSessionUuid()));
                 if (subscription.getDate() != null)
                     System.out.println("Subscription date: " + subscription.getDate().toString());
                 counter++;

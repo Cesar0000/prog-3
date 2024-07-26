@@ -24,7 +24,6 @@ public class TestController {
 
         auth.login("italan.leal@upe.br", "password");
 
-        event.createNewEvent("SUPER | 2024", "Tárcio");
         auth.logout();
 
 
