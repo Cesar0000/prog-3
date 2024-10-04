@@ -1,4 +1,4 @@
-package br.upe.UserInterface;
+package br.upe.userInterface;
 
 public class App {
     public static void main(String[] args) {

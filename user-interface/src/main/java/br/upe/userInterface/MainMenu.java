@@ -1,4 +1,4 @@
-package br.upe.UserInterface;
+package br.upe.userInterface;
 
 import br.upe.controllers.*;
 import br.upe.operations.HasherInterface;
