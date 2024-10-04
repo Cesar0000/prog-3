@@ -10,27 +10,16 @@
   </parent>
 
   <groupId>br.upe</groupId>
-  <artifactId>controllers</artifactId>
+  <artifactId>user-interface</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
-  <name>Controllers</name>
+  <name>User Interface</name>
 
   <dependencies>
     <dependency>
       <groupId>br.upe</groupId>
-      <artifactId>data-persistence</artifactId>
+      <artifactId>controllers</artifactId>
       <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
     </dependency>
   </dependencies>
 </project>
