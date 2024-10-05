@@ -125,6 +125,5 @@ public class EventCRUDTest {
         assertNotNull(returnedEvent);
         assertEquals(uuidToReturn, returnedEvent.getUuid());
     }
- */
 
 }
