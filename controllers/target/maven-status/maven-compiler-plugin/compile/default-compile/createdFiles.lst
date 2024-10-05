@@ -1,0 +1,10 @@
+br\upe\controllers\SubmissionController.class
+br\upe\controllers\TestController.class
+br\upe\controllers\CRUDController.class
+br\upe\controllers\AuthController.class
+br\upe\controllers\EventController.class
+br\upe\controllers\SessionController.class
+br\upe\controllers\StateController.class
+br\upe\controllers\ControllersInterface.class
+br\upe\controllers\SubscriptionController.class
+br\upe\controllers\UserController.class
