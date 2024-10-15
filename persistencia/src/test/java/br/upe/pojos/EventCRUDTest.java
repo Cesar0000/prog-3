@@ -30,6 +30,7 @@ public class EventCRUDTest {
     }
 
     @Test
+    // Testa a criação de um evento
     public void testCreateEvent() throws IOException {
         GreatEvent event = new GreatEvent();
         event.setUuid(UUID.randomUUID());
